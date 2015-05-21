@@ -49,6 +49,22 @@
         <file alias="twitter">res/icons/twitter_32x32.png</file>
         <file alias="messaging">res/icons/message.png</file>
         <file alias="mix">res/icons/mix_16x16.png</file>
+        <file alias="FL_ButtonImage1">res/icons/fl/FL_ButtonImage1.png</file>
+        <file alias="FL_ButtonImage2">res/icons/fl/FL_ButtonImage2.png</file>
+        <file alias="FL_ButtonImage3">res/icons/fl/FL_ButtonImage3.png</file>
+        <file alias="FL_ButtonImage4">res/icons/fl/FL_ButtonImage4.png</file>
+        <file alias="FL_ButtonImage5">res/icons/fl/FL_ButtonImage5.png</file>
+        <file alias="FL_ButtonImage6">res/icons/fl/FL_ButtonImage6.png</file>
+        <file alias="FL_ButtonImage7">res/icons/fl/FL_ButtonImage7.png</file>
+        <file alias="FL_ButtonImage8">res/icons/fl/FL_ButtonImage8.png</file>
+        <file alias="FL_ButtonImage9">res/icons/fl/FL_ButtonImage9.png</file>
+        <file alias="FL_ButtonImage10">res/icons/fl/FL_ButtonImage10.png</file>
+        <file alias="FL_ButtonImage11">res/icons/fl/FL_ButtonImage11.png</file>
+        <file alias="FL_ButtonImage12">res/icons/fl/FL_ButtonImage12.png</file>
+        <file alias="FL_ButtonImage13">res/icons/fl/FL_ButtonImage13.png</file>
+        <file alias="FL_ButtonImage14">res/icons/fl/FL_ButtonImage14.png</file>
+        <file alias="FL_ButtonImage15">res/icons/fl/FL_ButtonImage15.png</file>
+        <file alias="FL_ButtonImage16">res/icons/fl/FL_ButtonImage16.png</file>
     </qresource>
     <qresource prefix="/images">
         <file alias="about">res/images/about.png</file>
@@ -107,5 +123,6 @@
     </qresource>
     <qresource prefix="/styles">
         <file>res/styles/style.qss</file>
+        <file>res/styles/fl-style.qss</file>
     </qresource>
 </RCC>

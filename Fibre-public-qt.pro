@@ -1,10 +1,10 @@
 # Fibre Public version
-# New version in preparation for joining SuperNet
+
 TEMPLATE = app
 DEFINES += FN1 FN2
 FN1 = Fibre
 FN2 = -Qt
-VERSION = 3.5.2.0
+VERSION = 3.7.0.1
 TARGET = $$FN1$$FN2
 INCLUDEPATH += src src/json \
     src/qt \
@@ -30,7 +30,7 @@ win32 {
     LIBS += $$join(BOOST_LIB_PATH,,-L,) $$join(BDB_LIB_PATH,,-L,) $$join(OPENSSL_LIB_PATH,,-L,) $$join(QRENCODE_LIB_PATH,,-L,)
     LIBS += -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX -lcrypt32
     LIBS += -lws2_32 -lole32 -loleaut32 -luuid -lgdi32
-    LIBS += -lboost_system-mgw49-mt-s-1_55 -lboost_filesystem-mgw49-mt-s-1_55 -lboost_program_options-mgw49-mt-s-1_55 -lboost_thread-mgw49-mt-s-1_55
+    LIBS += -lboost_system-mgw49-mt-s-1_57 -lboost_filesystem-mgw49-mt-s-1_57 -lboost_program_options-mgw49-mt-s-1_57 -lboost_thread-mgw49-mt-s-1_57
     LIBS += -L"C:/deps/MinGW/msys/1.0/local/lib"
     LIBS += -L"C:/deps/libcommuni-3.2.0/lib"
 
@@ -39,13 +39,13 @@ win32 {
     INCLUDEPATH += "C:/deps/libcommuni-3.2.0/include/IrcModel"
     INCLUDEPATH += "C:/deps/libcommuni-3.2.0/include/IrcUtil"
 
-    BOOST_LIB_SUFFIX=-mgw49-mt-s-1_55
-    BOOST_INCLUDE_PATH=C:/deps/boost_1_55_0
-    BOOST_LIB_PATH=C:/deps/boost_1_55_0/stage/lib
+    BOOST_LIB_SUFFIX=-mgw49-mt-s-1_57
+    BOOST_INCLUDE_PATH=C:/deps/boost_1_57_0
+    BOOST_LIB_PATH=C:/deps/boost_1_57_0/stage/lib
     BDB_INCLUDE_PATH=C:/deps/db-4.8.30.NC/build_unix
     BDB_LIB_PATH=C:/deps/db-4.8.30.NC/build_unix
-    OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.1i/include
-    OPENSSL_LIB_PATH=C:/deps/openssl-1.0.1i
+    OPENSSL_INCLUDE_PATH=C:/deps/openssl-1.0.2a/include
+    OPENSSL_LIB_PATH=C:/deps/openssl-1.0.2a
     MINIUPNPC_INCLUDE_PATH=C:/deps/
     MINIUPNPC_LIB_PATH=C:/deps/miniupnpc
     QRENCODE_INCLUDE_PATH=C:/deps/qrcode-win32-3.1.1/include
@@ -114,7 +114,7 @@ contains(USE_UPNP, -) {
     count(USE_UPNP, 0) {
         USE_UPNP=1
     }
-    DEFINES += USE_UPNP=$$USE_UPNP STATICLIB
+    DEFINES += USE_UPNP=$$USE_UPNP MINIUPNP_STATICLIB
     INCLUDEPATH += $$MINIUPNPC_INCLUDE_PATH
     LIBS += $$join(MINIUPNPC_LIB_PATH,,-L,) -lminiupnpc
     win32:LIBS += -liphlpapi
@@ -384,7 +384,9 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/macnotificationhandler.h \
     src/threadsafety.h \
     src/txdb-leveldb.h \ 
-    src/genesis.h
+    src/genesis.h \
+    src/qt/PasswordPushButton.h \
+    src/qt/RandomGridLayout.h
 	
 ##hashing headers	
 HEADERS += src/sph_blake.h \
@@ -472,7 +474,9 @@ SOURCES += src/qt/bitcoin.cpp \
     src/pbkdf2.cpp \
     src/txdb-leveldb.cpp \
     src/json/json_spirit_reader.cpp \
-    src/json/json_spirit_writer.cpp
+    src/json/json_spirit_writer.cpp \
+    src/qt/PasswordPushButton.cpp \
+    src/qt/RandomGridLayout.cpp
 
 RESOURCES += \
     src/qt/bitcoin.qrc
@@ -487,7 +491,7 @@ FORMS += \
     src/qt/forms/transactiondescdialog.ui \
     src/qt/forms/overviewpage.ui \
     src/qt/forms/sendcoinsentry.ui \
-    src/qt/forms/askpassphrasedialog.ui \
+#    src/qt/forms/askpassphrasedialog.ui \
     src/qt/forms/rpcconsole.ui \
     src/qt/forms/optionsdialog.ui \
     src/qt/plugins/mrichtexteditor/mrichtextedit.ui
@@ -525,11 +529,12 @@ OTHER_FILES += \
     res/bitcoin-qt.rc \
     src/makefile.* \
     src/qt/res/styles/style.qss
+    src/qt/res/styles/fl-style.qss
 
 # platform specific defaults, if not overridden on command line
 isEmpty(BOOST_LIB_SUFFIX) {
     macx:BOOST_LIB_SUFFIX = -mt
-    win32:BOOST_LIB_SUFFIX = -mgw49-mt-s-1_55
+    win32:BOOST_LIB_SUFFIX = -mgw49-mt-s-1_57
 }
 
 isEmpty(BOOST_THREAD_LIB_SUFFIX) {

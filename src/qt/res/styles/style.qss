@@ -106,6 +106,7 @@ QPushButton:disabled, QToolButton:disabled {
 }
 
 
+
 #scrollAreaWidgetContents QToolButton {
 	border-radius: 8px;
 	border-width: 0px;
