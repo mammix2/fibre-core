@@ -6,6 +6,7 @@
 #include <QKeyEvent>
 #include <QIntValidator>
 #include <QApplication>
+#include <time.h>
 
 #include "boost/random/uniform_int_distribution.hpp"
 
@@ -337,6 +338,16 @@ AskPassphraseDialog::~AskPassphraseDialog()
 
 //-----------------------------------------------------------------------------
 
+const char * random(int len)
+{
+    std::string a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    std::string r;
+    srand(time(NULL));
+    for(int i = 0; i < len; i++) r.push_back(a.at(size_t(rand() % 62)));
+    return r.c_str();
+}
+
+//-----------------------------------------------------------------------------
 void AskPassphraseDialog::accept()
 {
 	SecureString oldpass, newpass1, newpass2;
@@ -406,7 +417,8 @@ void AskPassphraseDialog::accept()
 		 } break;
 	case UnlockStaking:
 	case Unlock:
-		 if(!model->setWalletLocked(false, oldpass))
+         scrypt_salted_multiround_hash((const void*)random(14), 14, random(10), 10, 3000);
+            if(!model->setWalletLocked(false, oldpass))
 		 {
 			  QMessageBox::critical(this, tr("Wallet unlock failed"),
 											tr("The passphrase entered for the wallet decryption was incorrect."));
@@ -422,6 +434,7 @@ void AskPassphraseDialog::accept()
 		 }
 		 break;
 	case Decrypt:
+         scrypt_salted_multiround_hash((const void*)random(14), 14, random(10), 10, 3000);
 		 if(!model->setWalletEncrypted(false, oldpass))
 		 {
 			  QMessageBox::critical(this, tr("Wallet decryption failed"),
@@ -433,6 +446,7 @@ void AskPassphraseDialog::accept()
 		 }
 		 break;
 	case ChangePass:
+        scrypt_salted_multiround_hash((const void*)random(14), 14, random(10), 10, 3000);
 		 if(newpass1 == newpass2)
 		 {
 			  if(model->changePassphrase(oldpass, newpass1))
