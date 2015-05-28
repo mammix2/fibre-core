@@ -29,6 +29,9 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     BOOST_INCLUDE_PATH=/usr/local/Cellar/boost/1.57.0/include
     BOOST_LIB_PATH=/usr/local/Cellar/boost/1.57.0/lib
 
+    EVENT_INCLUDE_PATH=/usr/local/Cellar/libevent/2.0.22/include
+    EVENT_LIB_PATH=/usr/local/Cellar/libevent/2.0.22/lib
+
     BDB_INCLUDE_PATH=/usr/local/opt/berkeley-db4/include
     BDB_LIB_PATH=/usr/local/Cellar/berkeley-db4/4.8.30/lib
 
@@ -41,6 +44,10 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     QRENCODE_INCLUDE_PATH=/usr/local/opt/qrencode/include
     QRENCODE_LIB_PATH=/usr/local/opt/qrencode/lib
 
+    DEFINES += IS_ARCH_64
+    QMAKE_CXXFLAGS += -arch x86_64 -stdlib=libc++
+    QMAKE_CFLAGS += -arch x86_64
+    QMAKE_LFLAGS += -arch x86_64 -stdlib=libc++
 
 win32 {
     LIBS += -lshlwapi
@@ -622,9 +629,9 @@ macx:ICON = src/qt/res/icons/bitcoin.icns
 macx:TARGET = $$FN1$$$$FN2
 
 # Set libraries and includes at end, to use platform-defined defaults if not overridden
-INCLUDEPATH +=  $$BOOST_INCLUDE_PATH $$BDB_INCLUDE_PATH $$OPENSSL_INCLUDE_PATH $$QRENCODE_INCLUDE_PATH $$LIBEVENT_INCLUDE_PATH
-LIBS += $$join(BOOST_LIB_PATH,,-L,) $$join(BDB_LIB_PATH,,-L,) $$join(OPENSSL_LIB_PATH,,-L,) $$join(QRENCODE_LIB_PATH,,-L,) $$join(LIBEVENT_LIB_PATH,,-L,)
-LIBS += -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX -lz -levent -lstdc++.6
+INCLUDEPATH += $$EVENT_INCLUDE_PATH $$BOOST_INCLUDE_PATH $$BDB_INCLUDE_PATH $$OPENSSL_INCLUDE_PATH $$QRENCODE_INCLUDE_PATH $$LIBEVENT_INCLUDE_PATH
+LIBS += $$join(BOOST_LIB_PATH,,-L,) $$join(EVENT_LIB_PATH,,-L,) $$join(BDB_LIB_PATH,,-L,) $$join(OPENSSL_LIB_PATH,,-L,) $$join(QRENCODE_LIB_PATH,,-L,) $$join(LIBEVENT_LIB_PATH,,-L,)
+LIBS += -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX -lz -levent
 
 # -lgdi32 has to happen after -lcrypto (see  #681)
 windows:LIBS += -lws2_32 -lshlwapi -lmswsock -lole32 -loleaut32 -luuid -lgdi32
