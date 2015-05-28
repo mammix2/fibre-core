@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QKeyEvent>
+#include <QIntValidator>
 #include <QApplication>
 
 #include "boost/random/uniform_int_distribution.hpp"
@@ -19,10 +20,7 @@
 
 extern bool fWalletUnlockStakingOnly;
 
-// some seed constants
-#define SEED_A				3
-#define SEED_B				-6
-#define SEED_C				13
+#define PIN_CODE_LEN			5
 
 // random generated code min and max length, you can change this values
 #define MIN_CODE_LEN			2
@@ -36,17 +34,8 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 	model = 0;
 	fCapsLock = false;
 
-
-
-	// Get the seed through series of calculations to make it not so obvious
-	int iX = 17;
-	int iVal;
-	iVal = SEED_A*iX*iX;
-	iVal += SEED_B*iX;
-	iVal += SEED_C;
-	iVal = (int)roundf(iVal*sin(M_PI/5.0));
 	// create the random generator with calculated seed
-	m_pRNG = new boost::random::mt19937(iVal);
+	m_pRNG = new boost::random::mt19937(0);
 
 	// main dialog layout
 	QVBoxLayout* pMainLayout = new QVBoxLayout(this);
@@ -64,6 +53,20 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 	// Caps lock warning label
 	m_plbCL = new QLabel;
 	pForm->addRow(m_plbCL);
+
+	m_plePin = new QLineEdit;
+	m_plePin->setMaxLength(PIN_CODE_LEN);
+	// make sure only digits are allowed
+	int iPinMax = 1;
+	for (int i = 0; i < PIN_CODE_LEN; i++)
+		iPinMax = 10*iPinMax;
+	m_plePin->setValidator(new QIntValidator(0, iPinMax-1, this));
+	// hide the output
+//	m_plePin->setEchoMode(QLineEdit::Password);
+	// make sure the pin is checked every time the value changes
+	connect(m_plePin, SIGNAL(textChanged(QString)), this, SLOT(CheckPin()));
+
+	pForm->addRow(tr("Enter %1 digit PIN code").arg(PIN_CODE_LEN), m_plePin);
 
 	if (this->mode != Encrypt) {
 		// create old password field and add it to form layout
@@ -130,147 +133,147 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
     // Create the button objects and constraints
     QPixmap FL_ButtonImage1;
     FL_ButtonImage1.load(":/icons/FL_ButtonImage1");
-    PasswordPushButton* FL_Button1 = new PasswordPushButton(FL_ButtonImage1, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button1);
-    connect(FL_Button1, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button1->setObjectName("FL_Button1");
-    FL_Button1->setMinimumSize(75,75);
-    FL_Button1->setMaximumSize(75,75);
+	 m_pFL_Button1 = new PasswordPushButton(FL_ButtonImage1, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button1);
+	 connect(m_pFL_Button1, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button1->setObjectName("FL_Button1");
+	 m_pFL_Button1->setMinimumSize(75,75);
+	 m_pFL_Button1->setMaximumSize(75,75);
 
-    QPixmap FL_ButtonImage2;
+	 QPixmap FL_ButtonImage2;
     FL_ButtonImage2.load(":/icons/FL_ButtonImage2");
-    PasswordPushButton* FL_Button2 = new PasswordPushButton(FL_ButtonImage2, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button2);
-    connect(FL_Button2, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button2->setObjectName("FL_Button2");
-    FL_Button2->setMinimumSize(75,75);
-    FL_Button2->setMaximumSize(75,75);
+	 m_pFL_Button2 = new PasswordPushButton(FL_ButtonImage2, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button2);
+	 connect(m_pFL_Button2, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button2->setObjectName("FL_Button2");
+	 m_pFL_Button2->setMinimumSize(75,75);
+	 m_pFL_Button2->setMaximumSize(75,75);
 
     QPixmap FL_ButtonImage3;
     FL_ButtonImage3.load(":/icons/FL_ButtonImage3");
-    PasswordPushButton* FL_Button3 = new PasswordPushButton(FL_ButtonImage3, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button3);
-    connect(FL_Button3, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button3->setObjectName("FL_Button3");
-    FL_Button3->setMinimumSize(75,75);
-    FL_Button3->setMaximumSize(75,75);
+	 m_pFL_Button3 = new PasswordPushButton(FL_ButtonImage3, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button3);
+	 connect(m_pFL_Button3, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button3->setObjectName("FL_Button3");
+	 m_pFL_Button3->setMinimumSize(75,75);
+	 m_pFL_Button3->setMaximumSize(75,75);
 
     QPixmap FL_ButtonImage4;
     FL_ButtonImage4.load(":/icons/FL_ButtonImage4");
-    PasswordPushButton* FL_Button4 = new PasswordPushButton(FL_ButtonImage4, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button4);
-    connect(FL_Button4, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button4->setObjectName("FL_Button4");
-    FL_Button4->setMinimumSize(75,75);
-    FL_Button4->setMaximumSize(75,75);
+	 m_pFL_Button4 = new PasswordPushButton(FL_ButtonImage4, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button4);
+	 connect(m_pFL_Button4, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button4->setObjectName("FL_Button4");
+	 m_pFL_Button4->setMinimumSize(75,75);
+	 m_pFL_Button4->setMaximumSize(75,75);
 
     QPixmap FL_ButtonImage5;
     FL_ButtonImage5.load(":/icons/FL_ButtonImage5");
-    PasswordPushButton* FL_Button5 = new PasswordPushButton(FL_ButtonImage5, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button5);
-    connect(FL_Button5, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button5->setObjectName("FL_Button5");
-    FL_Button5->setMinimumSize(75,75);
-    FL_Button5->setMaximumSize(75,75);
+	 m_pFL_Button5 = new PasswordPushButton(FL_ButtonImage5, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button5);
+	 connect(m_pFL_Button5, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button5->setObjectName("FL_Button5");
+	 m_pFL_Button5->setMinimumSize(75,75);
+	 m_pFL_Button5->setMaximumSize(75,75);
 
     QPixmap FL_ButtonImage6;
     FL_ButtonImage6.load(":/icons/FL_ButtonImage6");
-    PasswordPushButton* FL_Button6 = new PasswordPushButton(FL_ButtonImage6, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button6);
-    connect(FL_Button6, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button6->setObjectName("FL_Button6");
-    FL_Button6->setMinimumSize(75,75);
-    FL_Button6->setMaximumSize(75,75);
+	 m_pFL_Button6 = new PasswordPushButton(FL_ButtonImage6, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button6);
+	 connect(m_pFL_Button6, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button6->setObjectName("FL_Button6");
+	 m_pFL_Button6->setMinimumSize(75,75);
+	 m_pFL_Button6->setMaximumSize(75,75);
 
     QPixmap FL_ButtonImage7;
     FL_ButtonImage7.load(":/icons/FL_ButtonImage7");
-    PasswordPushButton* FL_Button7 = new PasswordPushButton(FL_ButtonImage7, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button7);
-    connect(FL_Button7, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button7->setObjectName("FL_Button7");
-    FL_Button7->setMinimumSize(75,75);
-    FL_Button7->setMaximumSize(75,75);
+	 m_pFL_Button7 = new PasswordPushButton(FL_ButtonImage7, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button7);
+	 connect(m_pFL_Button7, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button7->setObjectName("FL_Button7");
+	 m_pFL_Button7->setMinimumSize(75,75);
+	 m_pFL_Button7->setMaximumSize(75,75);
 
     QPixmap FL_ButtonImage8;
     FL_ButtonImage8.load(":/icons/FL_ButtonImage8");
-    PasswordPushButton* FL_Button8 = new PasswordPushButton(FL_ButtonImage8, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button8);
-    connect(FL_Button8, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button8->setObjectName("FL_Button8");
-    FL_Button8->setMinimumSize(75,75);
-    FL_Button8->setMaximumSize(75,75);
+	 m_pFL_Button8 = new PasswordPushButton(FL_ButtonImage8, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button8);
+	 connect(m_pFL_Button8, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button8->setObjectName("FL_Button8");
+	 m_pFL_Button8->setMinimumSize(75,75);
+	 m_pFL_Button8->setMaximumSize(75,75);
 
     QPixmap FL_ButtonImage9;
     FL_ButtonImage9.load(":/icons/FL_ButtonImage9");
-    PasswordPushButton* FL_Button9 = new PasswordPushButton(FL_ButtonImage9, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button9);
-    connect(FL_Button9, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button9->setObjectName("FL_Button9");
-    FL_Button9->setMinimumSize(75,75);
-    FL_Button9->setMaximumSize(75,75);
+	 m_pFL_Button9 = new PasswordPushButton(FL_ButtonImage9, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button9);
+	 connect(m_pFL_Button9, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button9->setObjectName("FL_Button9");
+	 m_pFL_Button9->setMinimumSize(75,75);
+	 m_pFL_Button9->setMaximumSize(75,75);
 
     QPixmap FL_ButtonImage10;
     FL_ButtonImage10.load(":/icons/FL_ButtonImage10");
-    PasswordPushButton* FL_Button10 = new PasswordPushButton(FL_ButtonImage10, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button10);
-    connect(FL_Button10, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button10->setObjectName("FL_Button10");
-    FL_Button10->setMinimumSize(75,75);
-    FL_Button10->setMaximumSize(75,75);
+	 m_pFL_Button10 = new PasswordPushButton(FL_ButtonImage10, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button10);
+	 connect(m_pFL_Button10, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button10->setObjectName("FL_Button10");
+	 m_pFL_Button10->setMinimumSize(75,75);
+	 m_pFL_Button10->setMaximumSize(75,75);
 
     QPixmap FL_ButtonImage11;
     FL_ButtonImage11.load(":/icons/FL_ButtonImage11");
-    PasswordPushButton* FL_Button11 = new PasswordPushButton(FL_ButtonImage11, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button11);
-    connect(FL_Button11, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button11->setObjectName("FL_Button11");
-    FL_Button11->setMinimumSize(75,75);
-    FL_Button11->setMaximumSize(75,75);
+	 m_pFL_Button11 = new PasswordPushButton(FL_ButtonImage11, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button11);
+	 connect(m_pFL_Button11, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button11->setObjectName("FL_Button11");
+	 m_pFL_Button11->setMinimumSize(75,75);
+	 m_pFL_Button11->setMaximumSize(75,75);
 
     QPixmap FL_ButtonImage12;
     FL_ButtonImage12.load(":/icons/FL_ButtonImage12");
-    PasswordPushButton* FL_Button12 = new PasswordPushButton(FL_ButtonImage12, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button12);
-    connect(FL_Button12, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button12->setObjectName("FL_Button12");
-    FL_Button12->setMinimumSize(75,75);
-    FL_Button12->setMaximumSize(75,75);
+	 m_pFL_Button12 = new PasswordPushButton(FL_ButtonImage12, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button12);
+	 connect(m_pFL_Button12, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button12->setObjectName("FL_Button12");
+	 m_pFL_Button12->setMinimumSize(75,75);
+	 m_pFL_Button12->setMaximumSize(75,75);
 
     QPixmap FL_ButtonImage13;
     FL_ButtonImage13.load(":/icons/FL_ButtonImage13");
-    PasswordPushButton* FL_Button13 = new PasswordPushButton(FL_ButtonImage13, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button13);
-    connect(FL_Button13, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button13->setObjectName("FL_Button13");
-    FL_Button13->setMinimumSize(75,75);
-    FL_Button13->setMaximumSize(75,75);
+	 m_pFL_Button13 = new PasswordPushButton(FL_ButtonImage13, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button13);
+	 connect(m_pFL_Button13, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button13->setObjectName("FL_Button13");
+	 m_pFL_Button13->setMinimumSize(75,75);
+	 m_pFL_Button13->setMaximumSize(75,75);
 
     QPixmap FL_ButtonImage14;
     FL_ButtonImage14.load(":/icons/FL_ButtonImage14");
-    PasswordPushButton* FL_Button14 = new PasswordPushButton(FL_ButtonImage14, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button14);
-    connect(FL_Button14, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button14->setObjectName("FL_Button14");
-    FL_Button14->setMinimumSize(75,75);
-    FL_Button14->setMaximumSize(75,75);
+	 m_pFL_Button14 = new PasswordPushButton(FL_ButtonImage14, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button14);
+	 connect(m_pFL_Button14, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button14->setObjectName("FL_Button14");
+	 m_pFL_Button14->setMinimumSize(75,75);
+	 m_pFL_Button14->setMaximumSize(75,75);
 
     QPixmap FL_ButtonImage15;
     FL_ButtonImage15.load(":/icons/FL_ButtonImage15");
-    PasswordPushButton* FL_Button15 = new PasswordPushButton(FL_ButtonImage15, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button15);
-    connect(FL_Button15, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button15->setObjectName("FL_Button15");
-    FL_Button15->setMinimumSize(75,75);
-    FL_Button15->setMaximumSize(75,75);
+	 m_pFL_Button15 = new PasswordPushButton(FL_ButtonImage15, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button15);
+	 connect(m_pFL_Button15, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button15->setObjectName("FL_Button15");
+	 m_pFL_Button15->setMinimumSize(75,75);
+	 m_pFL_Button15->setMaximumSize(75,75);
 
     QPixmap FL_ButtonImage16;
     FL_ButtonImage16.load(":/icons/FL_ButtonImage16");
-    PasswordPushButton* FL_Button16 = new PasswordPushButton(FL_ButtonImage16, "", GetRandomCode());
-    pRandGrid->AddWidget(FL_Button16);
-    connect(FL_Button16, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
-    FL_Button16->setObjectName("FL_Button16");
-    FL_Button16->setMinimumSize(75,75);
-    FL_Button16->setMaximumSize(75,75);
+	 m_pFL_Button16 = new PasswordPushButton(FL_ButtonImage16, "", GetRandomCode());
+	 pRandGrid->AddWidget(m_pFL_Button16);
+	 connect(m_pFL_Button16, SIGNAL(SignalText(QString)), this, SLOT(AppendText(QString)));
+	 m_pFL_Button16->setObjectName("FL_Button16");
+	 m_pFL_Button16->setMinimumSize(75,75);
+	 m_pFL_Button16->setMaximumSize(75,75);
 
 
 	pRandGrid->PlaceWidgets();
@@ -304,6 +307,8 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 	setWindowTitle(GetWindowTitle());
 	// sets the OK button to disabled state
 	textChanged();
+	// sets the text code buttons to disabled state
+	CheckPin();
 
         // **** Load the style sheet
     QFile f(":/styles/res/styles/fl-style.qss");
@@ -602,6 +607,59 @@ QString AskPassphraseDialog::GetRandomCode()
 
 //-----------------------------------------------------------------------------
 
+void AskPassphraseDialog::GenerateCodes()
+{
+	if (m_pRNG != 0)
+		delete m_pRNG;
+	// get the pin code
+	int iPin = m_plePin->text().toInt();
+	m_pRNG = new boost::random::mt19937(iPin);
+	// generate codes for all buttons
+	m_pFL_Button1->SetSignalText(GetRandomCode());
+	m_pFL_Button2->SetSignalText(GetRandomCode());
+	m_pFL_Button3->SetSignalText(GetRandomCode());
+	m_pFL_Button4->SetSignalText(GetRandomCode());
+	m_pFL_Button5->SetSignalText(GetRandomCode());
+	m_pFL_Button6->SetSignalText(GetRandomCode());
+	m_pFL_Button7->SetSignalText(GetRandomCode());
+	m_pFL_Button8->SetSignalText(GetRandomCode());
+	m_pFL_Button9->SetSignalText(GetRandomCode());
+	m_pFL_Button10->SetSignalText(GetRandomCode());
+	m_pFL_Button11->SetSignalText(GetRandomCode());
+	m_pFL_Button12->SetSignalText(GetRandomCode());
+	m_pFL_Button13->SetSignalText(GetRandomCode());
+	m_pFL_Button14->SetSignalText(GetRandomCode());
+	m_pFL_Button15->SetSignalText(GetRandomCode());
+	m_pFL_Button16->SetSignalText(GetRandomCode());
+
+	// enable all buttons
+	m_pFL_Button1->setEnabled(true);
+	m_pFL_Button2->setEnabled(true);
+	m_pFL_Button3->setEnabled(true);
+	m_pFL_Button4->setEnabled(true);
+	m_pFL_Button5->setEnabled(true);
+	m_pFL_Button6->setEnabled(true);
+	m_pFL_Button7->setEnabled(true);
+	m_pFL_Button8->setEnabled(true);
+	m_pFL_Button9->setEnabled(true);
+	m_pFL_Button10->setEnabled(true);
+	m_pFL_Button11->setEnabled(true);
+	m_pFL_Button12->setEnabled(true);
+	m_pFL_Button13->setEnabled(true);
+	m_pFL_Button14->setEnabled(true);
+	m_pFL_Button15->setEnabled(true);
+	m_pFL_Button16->setEnabled(true);
+
+	if (m_pleOld != 0)
+		m_pleOld->setEnabled(true);
+	if (m_pleNew != 0)
+		m_pleNew->setEnabled(true);
+	if (m_pleRepeated != 0)
+		m_pleRepeated->setEnabled(true);
+}
+
+//-----------------------------------------------------------------------------
+
 void AskPassphraseDialog::AppendText(QString qsText)
 {
 	// check if the widget with focus is a line edit field
@@ -638,6 +696,49 @@ void AskPassphraseDialog::textChanged()
 		  break;
 	 }
 	 m_pbOK->setEnabled(acceptable);
+}
+
+//-----------------------------------------------------------------------------
+
+void AskPassphraseDialog::CheckPin()
+{
+	if (m_plePin->text().length() != PIN_CODE_LEN) {
+		// disable all buttons
+		m_pFL_Button1->setEnabled(false);
+		m_pFL_Button2->setEnabled(false);
+		m_pFL_Button3->setEnabled(false);
+		m_pFL_Button4->setEnabled(false);
+		m_pFL_Button5->setEnabled(false);
+		m_pFL_Button6->setEnabled(false);
+		m_pFL_Button7->setEnabled(false);
+		m_pFL_Button8->setEnabled(false);
+		m_pFL_Button9->setEnabled(false);
+		m_pFL_Button10->setEnabled(false);
+		m_pFL_Button11->setEnabled(false);
+		m_pFL_Button12->setEnabled(false);
+		m_pFL_Button13->setEnabled(false);
+		m_pFL_Button14->setEnabled(false);
+		m_pFL_Button15->setEnabled(false);
+		m_pFL_Button16->setEnabled(false);
+
+		// also disable edit fields
+		if (m_pleOld != 0)
+			m_pleOld->setEnabled(false);
+		if (m_pleNew != 0)
+			m_pleNew->setEnabled(false);
+		if (m_pleRepeated != 0)
+			m_pleRepeated->setEnabled(false);
+	}	else {
+		GenerateCodes();
+		// disable the PIN edit. You can comment out this line, if the user
+		// should have a chance to correct the pin once it is entered
+		m_plePin->setEnabled(false);
+		// move focus to the next field
+		if (m_pleOld != 0)
+			m_pleOld->setFocus();
+		else if (m_pleNew != 0)
+			m_pleNew->setFocus();
+	}
 }
 
 //-----------------------------------------------------------------------------
