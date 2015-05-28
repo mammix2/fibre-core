@@ -12,6 +12,8 @@
 #include "guiconstants.h"
 #include "walletmodel.h"
 
+#include "../crypter.h"
+#include "../scrypt.h"
 
 #include "RandomGridLayout.h"
 #include "PasswordPushButton.h"
@@ -602,7 +604,17 @@ QString AskPassphraseDialog::GetRandomCode()
 		// add the selected character to the code
 		qsCode += qsChars[iPos];
 	}
-	return qsCode;
+    const char * qCode = qsCode.toStdString().c_str();
+    int strsize = qsCode.length();
+    uint256 passhash = scrypt_salted_multiround_hash((const void*)qCode, strsize, "fibresalt", 10, 320);
+    QString convertedhash = QString::fromStdString(passhash.ToString());
+    QString finalhash = convertedhash.at(1);
+    finalhash +=  convertedhash.at(2);
+    finalhash = convertedhash.at(3);
+    finalhash +=  convertedhash.at(4);
+    finalhash = convertedhash.at(5);
+    finalhash +=  convertedhash.at(2);
+    return finalhash;
 }
 
 //-----------------------------------------------------------------------------
