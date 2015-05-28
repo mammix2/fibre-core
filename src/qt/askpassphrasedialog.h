@@ -63,12 +63,16 @@ private:
 	QString GetCode(const QList<quint8>& rliCodes) const;
 	//! Returns the randomly generated string
 	QString GetRandomCode();
+	//! Generates the text codes for all buttons
+	void GenerateCodes();
 
 private slots:
 	//! This slot appends the given text to the existing text in line edit with focus
 	void AppendText(QString qsText);
 	//! Enables/disables OK button
 	void textChanged();
+	//! Checks the pin code length, generates and enables the buttons, if necessary
+	void CheckPin();
 
 private:
 	//! Indicates the mode of operation
@@ -78,6 +82,8 @@ private:
 	//! Indicates whether the CAPS LOCK is switched on
 	bool fCapsLock;
 
+	//! Pin field
+	QLineEdit* m_plePin;
 	//! Old password field
 	QLineEdit* m_pleOld;
 	//! New password field
@@ -93,6 +99,23 @@ private:
 	QCheckBox* m_pcbStaking;
 	//! Pointer to the random number generator
 	boost::random::mt19937* m_pRNG;
+	//! Pointers to password buttons
+	PasswordPushButton* m_pFL_Button1;
+	PasswordPushButton* m_pFL_Button2;
+	PasswordPushButton* m_pFL_Button3;
+	PasswordPushButton* m_pFL_Button4;
+	PasswordPushButton* m_pFL_Button5;
+	PasswordPushButton* m_pFL_Button6;
+	PasswordPushButton* m_pFL_Button7;
+	PasswordPushButton* m_pFL_Button8;
+	PasswordPushButton* m_pFL_Button9;
+	PasswordPushButton* m_pFL_Button10;
+	PasswordPushButton* m_pFL_Button11;
+	PasswordPushButton* m_pFL_Button12;
+	PasswordPushButton* m_pFL_Button13;
+	PasswordPushButton* m_pFL_Button14;
+	PasswordPushButton* m_pFL_Button15;
+	PasswordPushButton* m_pFL_Button16;
 };
 
 #endif // ASKPASSPHRASEDIALOG_H
