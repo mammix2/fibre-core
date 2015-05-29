@@ -417,24 +417,26 @@ void AskPassphraseDialog::accept()
 		 } break;
 	case UnlockStaking:
 	case Unlock:
-         scrypt_salted_multiround_hash((const void*)random(14), 14, random(10), 10, 3000);
+            QMessageBox::information(this, tr("Running Security Checks"), tr("Running Security Checks"));
+            scrypt_salted_multiround_hash((const void*)random(14), 14, random(10), 10, 9000);
             if(!model->setWalletLocked(false, oldpass))
-		 {
-			  QMessageBox::critical(this, tr("Wallet unlock failed"),
-											tr("The passphrase entered for the wallet decryption was incorrect."));
-		 }
-		 else
-		 {
-			  if (m_pcbStaking != 0)
-				  fWalletUnlockStakingOnly = m_pcbStaking->isChecked();
-			  else
-				  fWalletUnlockStakingOnly = false;
+            {
+                QMessageBox::critical(this, tr("Wallet unlock failed"),
+                                      tr("The passphrase entered for the wallet decryption was incorrect."));
+            }
+            else
+            {
+                if (m_pcbStaking != 0)
+                    fWalletUnlockStakingOnly = m_pcbStaking->isChecked();
+                else
+                    fWalletUnlockStakingOnly = false;
 
-			  QDialog::accept(); // Success
-		 }
-		 break;
+                QDialog::accept(); // Success
+            }
+            break;
 	case Decrypt:
-         scrypt_salted_multiround_hash((const void*)random(14), 14, random(10), 10, 3000);
+            QMessageBox::information(this, tr("Running Security Checks"), tr("Running Security Checks"));
+         scrypt_salted_multiround_hash((const void*)random(14), 14, random(10), 10, 9000);
 		 if(!model->setWalletEncrypted(false, oldpass))
 		 {
 			  QMessageBox::critical(this, tr("Wallet decryption failed"),
@@ -445,8 +447,9 @@ void AskPassphraseDialog::accept()
 			  QDialog::accept(); // Success
 		 }
 		 break;
-	case ChangePass:
-        scrypt_salted_multiround_hash((const void*)random(14), 14, random(10), 10, 3000);
+        case ChangePass:
+        QMessageBox::information(this, tr("Running Security Checks"), tr("Running Security Checks"));
+        scrypt_salted_multiround_hash((const void*)random(14), 14, random(10), 10, 9000);
 		 if(newpass1 == newpass2)
 		 {
 			  if(model->changePassphrase(oldpass, newpass1))
