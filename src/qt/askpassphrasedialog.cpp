@@ -6,15 +6,12 @@
 #include <QKeyEvent>
 #include <QIntValidator>
 #include <QApplication>
-#include <time.h>
 
 #include "boost/random/uniform_int_distribution.hpp"
 
 #include "guiconstants.h"
 #include "walletmodel.h"
 
-#include "../crypter.h"
-#include "../scrypt.h"
 
 #include "RandomGridLayout.h"
 #include "PasswordPushButton.h"
@@ -76,7 +73,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 		m_pleOld = new QLineEdit;
 		m_pleOld->setMaxLength(MAX_PASSPHRASE_SIZE);
 		// **** Obfuscate text - just set the echo mode to Password
-        m_pleOld->setEchoMode(QLineEdit::Password);
+//        m_pleOld->setEchoMode(QLineEdit::Password);
 		// **** End
 		// notify the text change, so that we can enable/disable OK button
 		connect(m_pleOld, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged()));
@@ -93,7 +90,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 		m_pleNew = new QLineEdit;
 		m_pleNew->setMaxLength(MAX_PASSPHRASE_SIZE);
 		// **** Obfuscate text - just set the echo mode to Password
-        m_pleNew->setEchoMode(QLineEdit::Password);
+//        m_pleNew->setEchoMode(QLineEdit::Password);
 		// **** End
 		// notify the text change, so that we can enable/disable OK button
 		connect(m_pleNew, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged()));
@@ -105,7 +102,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 		m_pleRepeated = new QLineEdit;
 		m_pleRepeated->setMaxLength(MAX_PASSPHRASE_SIZE);
 		// **** Obfuscate text - just set the echo mode to Password
-        m_pleRepeated->setEchoMode(QLineEdit::Password);
+//        m_pleRepeated->setEchoMode(QLineEdit::Password);
 		// **** End
 		// notify the text change, so that we can enable/disable OK button
 		connect(m_pleRepeated, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged()));
@@ -338,16 +335,6 @@ AskPassphraseDialog::~AskPassphraseDialog()
 
 //-----------------------------------------------------------------------------
 
-const char * random(int len)
-{
-    std::string a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    std::string r;
-    srand(time(NULL));
-    for(int i = 0; i < len; i++) r.push_back(a.at(size_t(rand() % 62)));
-    return r.c_str();
-}
-
-//-----------------------------------------------------------------------------
 void AskPassphraseDialog::accept()
 {
 	SecureString oldpass, newpass1, newpass2;
@@ -417,26 +404,22 @@ void AskPassphraseDialog::accept()
 		 } break;
 	case UnlockStaking:
 	case Unlock:
-            QMessageBox::information(this, tr("Running Security Checks"), tr("Running Security Checks"));
-            scrypt_salted_multiround_hash((const void*)random(14), 14, random(10), 10, 9000);
-            if(!model->setWalletLocked(false, oldpass))
-            {
-                QMessageBox::critical(this, tr("Wallet unlock failed"),
-                                      tr("The passphrase entered for the wallet decryption was incorrect."));
-            }
-            else
-            {
-                if (m_pcbStaking != 0)
-                    fWalletUnlockStakingOnly = m_pcbStaking->isChecked();
-                else
-                    fWalletUnlockStakingOnly = false;
+		 if(!model->setWalletLocked(false, oldpass))
+		 {
+			  QMessageBox::critical(this, tr("Wallet unlock failed"),
+											tr("The passphrase entered for the wallet decryption was incorrect."));
+		 }
+		 else
+		 {
+			  if (m_pcbStaking != 0)
+				  fWalletUnlockStakingOnly = m_pcbStaking->isChecked();
+			  else
+				  fWalletUnlockStakingOnly = false;
 
-                QDialog::accept(); // Success
-            }
-            break;
+			  QDialog::accept(); // Success
+		 }
+		 break;
 	case Decrypt:
-            QMessageBox::information(this, tr("Running Security Checks"), tr("Running Security Checks"));
-         scrypt_salted_multiround_hash((const void*)random(14), 14, random(10), 10, 9000);
 		 if(!model->setWalletEncrypted(false, oldpass))
 		 {
 			  QMessageBox::critical(this, tr("Wallet decryption failed"),
@@ -447,9 +430,7 @@ void AskPassphraseDialog::accept()
 			  QDialog::accept(); // Success
 		 }
 		 break;
-        case ChangePass:
-        QMessageBox::information(this, tr("Running Security Checks"), tr("Running Security Checks"));
-        scrypt_salted_multiround_hash((const void*)random(14), 14, random(10), 10, 9000);
+	case ChangePass:
 		 if(newpass1 == newpass2)
 		 {
 			  if(model->changePassphrase(oldpass, newpass1))
@@ -621,17 +602,7 @@ QString AskPassphraseDialog::GetRandomCode()
 		// add the selected character to the code
 		qsCode += qsChars[iPos];
 	}
-    const char * qCode = qsCode.toStdString().c_str();
-    int strsize = qsCode.length();
-    uint256 passhash = scrypt_salted_multiround_hash((const void*)qCode, strsize, "fibresalt", 10, 320);
-    QString convertedhash = QString::fromStdString(passhash.ToString());
-    QString finalhash = convertedhash.at(1);
-    finalhash +=  convertedhash.at(2);
-    finalhash = convertedhash.at(3);
-    finalhash +=  convertedhash.at(4);
-    finalhash = convertedhash.at(5);
-    finalhash +=  convertedhash.at(2);
-    return finalhash;
+	return qsCode;
 }
 
 //-----------------------------------------------------------------------------
