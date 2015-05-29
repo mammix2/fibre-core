@@ -25,33 +25,9 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
 }
 
-    BOOST_LIB_SUFFIX=-mt
-    BOOST_INCLUDE_PATH=/usr/local/Cellar/boost/1.57.0/include
-    BOOST_LIB_PATH=/usr/local/Cellar/boost/1.57.0/lib
-
-    EVENT_INCLUDE_PATH=/usr/local/Cellar/libevent/2.0.22/include
-    EVENT_LIB_PATH=/usr/local/Cellar/libevent/2.0.22/lib
-
-    BDB_INCLUDE_PATH=/usr/local/opt/berkeley-db4/include
-    BDB_LIB_PATH=/usr/local/Cellar/berkeley-db4/4.8.30/lib
-
-    OPENSSL_INCLUDE_PATH=/usr/local/opt/openssl/include
-    OPENSSL_LIB_PATH=/usr/local/opt/openssl/lib
-
-    MINIUPNPC_INCLUDE_PATH=/usr/local/opt/miniupnpc/include
-    MINIUPNPC_LIB_PATH=/usr/local/Cellar/miniupnpc/1.9.20141027/lib
-
-    QRENCODE_INCLUDE_PATH=/usr/local/opt/qrencode/include
-    QRENCODE_LIB_PATH=/usr/local/opt/qrencode/lib
-
-    DEFINES += IS_ARCH_64
-    QMAKE_CXXFLAGS += -arch x86_64 -stdlib=libc++
-    QMAKE_CFLAGS += -arch x86_64
-    QMAKE_LFLAGS += -arch x86_64 -stdlib=libc++
-
 win32 {
     LIBS += -lshlwapi
-    LIBS += $$join(BOOST_LIB_PATH,,-L,)  $$join(BDB_LIB_PATH,,-L,) $$join(OPENSSL_LIB_PATH,,-L,) $$join(QRENCODE_LIB_PATH,,-L,)
+    LIBS += $$join(BOOST_LIB_PATH,,-L,) $$join(BDB_LIB_PATH,,-L,) $$join(OPENSSL_LIB_PATH,,-L,) $$join(QRENCODE_LIB_PATH,,-L,)
     LIBS += -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX -lcrypt32
     LIBS += -lws2_32 -lole32 -loleaut32 -luuid -lgdi32
     LIBS += -lboost_system-mgw49-mt-s-1_57 -lboost_filesystem-mgw49-mt-s-1_57 -lboost_program_options-mgw49-mt-s-1_57 -lboost_thread-mgw49-mt-s-1_57
@@ -552,7 +528,7 @@ OTHER_FILES += \
     doc/README README.md \
     res/bitcoin-qt.rc \
     src/makefile.* \
-    src/qt/res/styles/style.qss \
+    src/qt/res/styles/style.qss
     src/qt/res/styles/fl-style.qss
 
 # platform specific defaults, if not overridden on command line
@@ -612,15 +588,6 @@ windows:!contains(MINGW_THREAD_BUGFIX, 0) {
     LIBS += -lrt
 }
 
-
-isEmpty(LIBEVENT_LIB_PATH) {
-    macx:LIBEVENT_LIB_PATH = /usr/local/Cellar/libevent/2.0.22/lib
-}
-
-isEmpty(LIBEVENT_INCLUDE_PATH) {
-    macx:LIBEVENT_INCLUDE_PATH = /usr/local/Cellar/libevent/2.0.22/include
-}
-
 macx:HEADERS += src/qt/macdockiconhandler.h src/qt/macnotificationhandler.h
 macx:OBJECTIVE_SOURCES += src/qt/macdockiconhandler.mm src/qt/macnotificationhandler.mm
 macx:LIBS += -framework Foundation -framework ApplicationServices -framework AppKit -framework CoreServices
@@ -632,9 +599,10 @@ macx:QMAKE_LFLAGS_THREAD += -pthread
 macx:QMAKE_CXXFLAGS_THREAD += -pthread
 
 # Set libraries and includes at end, to use platform-defined defaults if not overridden
-INCLUDEPATH += $$EVENT_INCLUDE_PATH $$BOOST_INCLUDE_PATH $$BDB_INCLUDE_PATH $$OPENSSL_INCLUDE_PATH $$QRENCODE_INCLUDE_PATH $$LIBEVENT_INCLUDE_PATH
-LIBS += $$join(BOOST_LIB_PATH,,-L,) $$join(EVENT_LIB_PATH,,-L,) $$join(BDB_LIB_PATH,,-L,) $$join(OPENSSL_LIB_PATH,,-L,) $$join(QRENCODE_LIB_PATH,,-L,) $$join(LIBEVENT_LIB_PATH,,-L,)
-LIBS += -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX -lz -levent
+INCLUDEPATH += $$BOOST_INCLUDE_PATH $$BDB_INCLUDE_PATH $$OPENSSL_INCLUDE_PATH $$QRENCODE_INCLUDE_PATH $$LIBEVENT_INCLUDE_PATH
+LIBS += $$join(BOOST_LIB_PATH,,-L,) $$join(BDB_LIB_PATH,,-L,) $$join(OPENSSL_LIB_PATH,,-L,) $$join(QRENCODE_LIB_PATH,,-L,) $$join(LIBEVENT_LIB_PATH,,-L,)
+LIBS += -lssl -lcrypto -ldb_cxx$$BDB_LIB_SUFFIX
+LIBS += -levent -lz
 
 # -lgdi32 has to happen after -lcrypto (see  #681)
 windows:LIBS += -lws2_32 -lshlwapi -lmswsock -lole32 -loleaut32 -luuid -lgdi32
