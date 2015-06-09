@@ -1,5 +1,5 @@
 QPushButton#FL_Button1, QPushButton#FL_Button2, QPushButton#FL_Button3, QPushButton#FL_Button4, QPushButton#FL_Button5, QPushButton#FL_Button6, QPushButton#FL_Button7, QPushButton#FL_Button8, QPushButton#FL_Button9, QPushButton#FL_Button10, QPushButton#FL_Button11, QPushButton#FL_Button12, QPushButton#FL_Button13, QPushButton#FL_Button14, QPushButton#FL_Button15, QPushButton#FL_Button16 {
-        border: 6px solid #fff;
+        border: 3px solid #ffffff;
         border-radius: 30px;
         background-color: #111;
         color: white;
@@ -7,11 +7,18 @@ QPushButton#FL_Button1, QPushButton#FL_Button2, QPushButton#FL_Button3, QPushBut
 }
 
 QPushButton#FL_Button1:pressed, QPushButton#FL_Button2:pressed, QPushButton#FL_Button3:pressed, QPushButton#FL_Button4:pressed, QPushButton#FL_Button5:pressed, QPushButton#FL_Button6:pressed, QPushButton#FL_Button7:pressed, QPushButton#FL_Button8:pressed, QPushButton#FL_Button9:pressed, QPushButton#FL_Button10:pressed, QPushButton#FL_Button11:pressed, QPushButton#FL_Button12:pressed, QPushButton#FL_Button13:pressed, QPushButton#FL_Button14:pressed, QPushButton#FL_Button15:pressed, QPushButton#FL_Button16:pressed {
-        border: 6px solid #E86941;
+        border: 3px solid #E86941;
         border-radius: 30px;
         background-color: #111;
         color: white;
         padding: 2px;
 }
 
+QPushButton#FL_Button1:disabled, QPushButton#FL_Button2:disabled, QPushButton#FL_Button3:disabled, QPushButton#FL_Button4:disabled, QPushButton#FL_Button5:disabled, QPushButton#FL_Button6:disabled, QPushButton#FL_Button7:disabled, QPushButton#FL_Button8:disabled, QPushButton#FL_Button9:disabled, QPushButton#FL_Button10:disabled, QPushButton#FL_Button11:disabled, QPushButton#FL_Button12:disabled, QPushButton#FL_Button13:disabled, QPushButton#FL_Button14:disabled, QPushButton#FL_Button15:disabled, QPushButton#FL_Button16:disabled {
+        border: 3px solid #999999;
+        border-radius: 30px;
+        background-color: #111;
+        color: white;
+        padding: 2px;
+}
 

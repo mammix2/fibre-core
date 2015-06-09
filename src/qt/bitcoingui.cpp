@@ -266,12 +266,6 @@ void BitcoinGUI::createActions()
     addressBookAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_5));
     tabGroup->addAction(addressBookAction);
 
-    blockAction = new QAction(QIcon(":/icons/block"), tr("&Block Explorer"), this);
-    blockAction->setToolTip(tr("Explore the BlockChain"));
-    blockAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_6));
-    blockAction->setCheckable(true);
-    tabGroup->addAction(blockAction);
-    connect(blockAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(overviewAction, SIGNAL(triggered()), this, SLOT(gotoOverviewPage()));
     connect(sendCoinsAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
@@ -358,7 +352,7 @@ void BitcoinGUI::createMenuBar()
     menu->addAction(overviewAction);
     menu->addAction(sendCoinsAction);
     menu->addAction(receiveCoinsAction);
-;
+
     menu->addAction(historyAction);
     menu->addAction(addressBookAction);
 
@@ -387,8 +381,7 @@ void BitcoinGUI::createToolBars(QToolBar* toolbar)
     toolbar->addAction(receiveCoinsAction);
     toolbar->addAction(historyAction);
     toolbar->addAction(addressBookAction);
-	toolbar->addAction(blockAction);
-//    toolbar->addAction(exportAction);
+    toolbar->addAction(exportAction);
 
 //    QToolBar *toolbar2 = addToolBar(tr("Actions toolbar"));
 //    toolbar2->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);

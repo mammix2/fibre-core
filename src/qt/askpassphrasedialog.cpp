@@ -75,9 +75,9 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 		// create old password field and add it to form layout
 		m_pleOld = new QLineEdit;
 		m_pleOld->setMaxLength(MAX_PASSPHRASE_SIZE);
-		// **** Obfuscate text - just set the echo mode to Password
+        //  Obfuscate text - just set the echo mode to Password
         m_pleOld->setEchoMode(QLineEdit::Password);
-		// **** End
+
 		// notify the text change, so that we can enable/disable OK button
 		connect(m_pleOld, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged()));
 		// set the event filter to detect CAPS LOCK status
@@ -92,9 +92,8 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 		// create new password field and add it to form layout
 		m_pleNew = new QLineEdit;
 		m_pleNew->setMaxLength(MAX_PASSPHRASE_SIZE);
-		// **** Obfuscate text - just set the echo mode to Password
+        //  Obfuscate text - just set the echo mode to Password
         m_pleNew->setEchoMode(QLineEdit::Password);
-		// **** End
 		// notify the text change, so that we can enable/disable OK button
 		connect(m_pleNew, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged()));
 		// set the event filter to detect CAPS LOCK status
@@ -104,9 +103,8 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 		// create repeat new password field and add it to form layout
 		m_pleRepeated = new QLineEdit;
 		m_pleRepeated->setMaxLength(MAX_PASSPHRASE_SIZE);
-		// **** Obfuscate text - just set the echo mode to Password
-        m_pleRepeated->setEchoMode(QLineEdit::Password);
-		// **** End
+        //  Obfuscate text - just set the echo mode to Password
+        m_pleRepeated->setEchoMode(QLineEdit::Password);	
 		// notify the text change, so that we can enable/disable OK button
 		connect(m_pleRepeated, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged()));
 		// set the event filter to detect CAPS LOCK status
@@ -289,16 +287,16 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 	// create Cancel button and connect it to reject slot
 	pPB = new QPushButton(tr("Cancel"));
 	connect(pPB, SIGNAL(clicked()), this, SLOT(reject()));
-	// **** Prevent activating Cancel button on Enter
+    //  Prevent activating Cancel button on Enter
 	pPB->setAutoDefault(false);
-	// **** End
+
 	pButtonLayout->addWidget(pPB);
 	// create OK button and connect it to accept slot
 	m_pbOK = new QPushButton(tr("OK"));
 	connect(m_pbOK, SIGNAL(clicked()), this, SLOT(accept()));
-	// **** Activate OK button on Enter
+    //  Activate OK button on Enter
 	m_pbOK->setAutoDefault(true);
-	// **** End
+
 	pButtonLayout->addWidget(m_pbOK);
 
 	// Place the sub layouts into the main one
@@ -313,19 +311,19 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 	// sets the text code buttons to disabled state
 	CheckPin();
 
-        // **** Load the style sheet
+        //  Load the style sheet
     QFile f(":/styles/res/styles/fl-style.qss");
     f.open(QFile::ReadOnly);
     QString qsAll = f.readAll();
     f.close();
     // assign the style sheet to the entire dialog
     setStyleSheet(qsAll);
-    // **** End
 
-    // **** Set minimal and maximal allowed size
+
+    //  Set minimal and maximal allowed size
     setMinimumSize(420, 620);
 
-    // **** End
+
 }
 
 //-----------------------------------------------------------------------------
