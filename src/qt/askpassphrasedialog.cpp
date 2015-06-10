@@ -63,7 +63,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
     m_plePin->setStyleSheet("QLineEdit { background-color: #E86941; border: 1px solid #ffffff;}");
     //  Set minimal and maximal allowed size
 #ifdef Q_OS_MAC
-    m_plePin->setMinimumWidth(600);
+    m_plePin->setMinimumWidth(400);
 #endif
     // make sure only digits are allowed
 	int iPinMax = 1;
@@ -82,7 +82,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
         //  Obfuscate text - just set the echo mode to Password
         m_pleOld->setEchoMode(QLineEdit::Password);
 #ifdef Q_OS_MAC
-        m_pleOld->setMinimumWidth(600);
+        m_pleOld->setMinimumWidth(400);
 #endif
 
 		// notify the text change, so that we can enable/disable OK button
@@ -101,7 +101,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 		m_pleNew->setMaxLength(MAX_PASSPHRASE_SIZE);
         m_pleNew->setToolTip(tr("Enter new passphrase using the keypad below or keyboard, or a mixture of both"));
 #ifdef Q_OS_MAC
-        m_pleNew->setMinimumWidth(600);
+        m_pleNew->setMinimumWidth(400);
 #endif
         //  Obfuscate text - just set the echo mode to Password
         m_pleNew->setEchoMode(QLineEdit::Password);
@@ -116,7 +116,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 		m_pleRepeated->setMaxLength(MAX_PASSPHRASE_SIZE);
         m_pleRepeated->setToolTip(tr("Repeat your passphrase"));
 #ifdef Q_OS_MAC
-        m_pleRepeated->setMinimumWidth(600);
+        m_pleRepeated->setMinimumWidth(400);
 #endif
         //  Obfuscate text - just set the echo mode to Password
         m_pleRepeated->setEchoMode(QLineEdit::Password);	
