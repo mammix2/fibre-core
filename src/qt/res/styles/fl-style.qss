@@ -17,7 +17,7 @@ QPushButton#FL_Button1:pressed, QPushButton#FL_Button2:pressed, QPushButton#FL_B
 QPushButton#FL_Button1:disabled, QPushButton#FL_Button2:disabled, QPushButton#FL_Button3:disabled, QPushButton#FL_Button4:disabled, QPushButton#FL_Button5:disabled, QPushButton#FL_Button6:disabled, QPushButton#FL_Button7:disabled, QPushButton#FL_Button8:disabled, QPushButton#FL_Button9:disabled, QPushButton#FL_Button10:disabled, QPushButton#FL_Button11:disabled, QPushButton#FL_Button12:disabled, QPushButton#FL_Button13:disabled, QPushButton#FL_Button14:disabled, QPushButton#FL_Button15:disabled, QPushButton#FL_Button16:disabled {
         border: 3px solid #999999;
         border-radius: 30px;
-        background-color: #111;
+        background-color: #333333;
         color: white;
         padding: 2px;
 }

@@ -4,7 +4,7 @@ TEMPLATE = app
 DEFINES += FN1 FN2
 FN1 = Fibre
 FN2 = -Qt
-VERSION = 3.7.0.2
+VERSION = 3.7.0.3
 TARGET = $$FN1$$FN2
 INCLUDEPATH += src src/json \
     src/qt \
@@ -35,9 +35,6 @@ win32 {
     LIBS += -L"C:/deps/libcommuni-3.2.0/lib"
 
     INCLUDEPATH += "C:/deps/MinGW/msys/1.0/local/include"
-    INCLUDEPATH += "C:/deps/libcommuni-3.2.0/include/IrcCore"
-    INCLUDEPATH += "C:/deps/libcommuni-3.2.0/include/IrcModel"
-    INCLUDEPATH += "C:/deps/libcommuni-3.2.0/include/IrcUtil"
 
     BOOST_LIB_SUFFIX=-mgw49-mt-s-1_57
     BOOST_INCLUDE_PATH=C:/deps/boost_1_57_0
@@ -396,10 +393,6 @@ HEADERS += src/sph_blake.h \
     src/sph_keccak.h \
     src/sph_skein.h \
     src/sph_types.h 
-	
-##encryption + compression headers
-HEADERS +=  src/lz4/lz4.h \
-    src/xxhash/xxhash.h
 
 
 SOURCES += src/qt/bitcoin.cpp \
@@ -493,8 +486,7 @@ FORMS += \
     src/qt/forms/overviewpage.ui \
     src/qt/forms/sendcoinsentry.ui \
     src/qt/forms/rpcconsole.ui \
-    src/qt/forms/optionsdialog.ui \
-    src/qt/plugins/mrichtexteditor/mrichtextedit.ui
+    src/qt/forms/optionsdialog.ui
 
 contains(USE_QRCODE, 1) {
 HEADERS += src/qt/qrcodedialog.h
@@ -542,7 +534,7 @@ isEmpty(BOOST_THREAD_LIB_SUFFIX) {
 }
 
 isEmpty(BDB_LIB_PATH) {
-    macx:BDB_LIB_PATH = /opt/local/lib/db48
+    macx:BDB_LIB_PATH = /usr/local/Cellar/berkeley-db4/4.8.30/lib
 }
 
 isEmpty(BDB_LIB_SUFFIX) {
@@ -550,23 +542,23 @@ isEmpty(BDB_LIB_SUFFIX) {
 }
 
 isEmpty(BDB_INCLUDE_PATH) {
-    macx:BDB_INCLUDE_PATH = /opt/local/include/db48
+    macx:BDB_INCLUDE_PATH = /usr/local/Cellar/berkeley-db4/4.8.30/include
 }
 
 isEmpty(BOOST_LIB_PATH) {
-    macx:BOOST_LIB_PATH = /opt/local/lib
+    macx:BOOST_LIB_PATH = /usr/local/lib
 }
 
 isEmpty(BOOST_INCLUDE_PATH) {
-    macx:BOOST_INCLUDE_PATH = /opt/local/include
+    macx:BOOST_INCLUDE_PATH = /usr/local/include
 }
 
 isEmpty(QRENCODE_LIB_PATH) {
-    macx:QRENCODE_LIB_PATH = /opt/local/lib
+    macx:QRENCODE_LIB_PATH = /usr/local/lib
 }
 
 isEmpty(QRENCODE_INCLUDE_PATH) {
-    macx:QRENCODE_INCLUDE_PATH = /opt/local/include
+    macx:QRENCODE_INCLUDE_PATH = /usr/local/include
 }
 
 windows:DEFINES += WIN32
