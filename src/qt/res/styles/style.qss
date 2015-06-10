@@ -62,8 +62,15 @@ QDialog, QMainWindow, QFrame {
 
 
 QMenu {
-	background-color: #333333; color: white;
+        background-color: #333333;
+        color: white;
 }
+
+QMenu::item:selected {
+        background-color: #E86941;
+        color: white;
+}
+
 
 QLabel {
 	background-color: transparent;
@@ -73,7 +80,10 @@ QCheckBox {
     color: white;
 }
 
-QFrame#central { background-color: #333333; border: none }
+QFrame#central {
+        background-color: #333333;
+        border: none
+        }
 QFrame#frame, QFrame#frame_2, QFrame#frame_3 {
 	background-color: #333333;
 	border-style: plain;
@@ -83,8 +93,12 @@ QFrame#frame, QFrame#frame_2, QFrame#frame_3 {
 	min-width: 10em;
 	padding: 6px;
 }
-QLabel[openExternalLinks=true], QHeaderView { color: #aaaaaa }
-QLabel[openExternalLinks=false] { color: white; font-weight: normal }
+QLabel[openExternalLinks=true], QHeaderView {
+        color: #aaaaaa
+        }
+QLabel[openExternalLinks=false] { color: white;
+        font-weight: normal
+        }
 QPushButton, QToolButton {
 	border: 4px solid #111;
 	border-radius: 12px;
@@ -116,12 +130,25 @@ QPushButton:disabled, QToolButton:disabled {
    due to the entire toolbar area not being drawable in a regular
    QMainWindow
 */
-QToolBar { background: #333333; border: 0px solid black; padding: 3px; }
+QToolBar {
+        background: #333333;
+        border: 0px solid black;
+        padding: 3px;
+        }
 
-QToolBar::handle { image: url(handle.png); }
-QStatusBar { background: #333333; }
-QMenuBar { background: #333333; }
-QMenuBar::item { background: #333333; color: white; }
+QToolBar::handle {
+        image: url(handle.png);
+        }
+QStatusBar {
+        background: #333333;
+        }
+QMenuBar {
+        background: #333333;
+        }
+QMenuBar::item {
+        background: #333333;
+        color: white;
+        }
 
 #scrollAreaWidgetContents { background: #222 }
 #scrollAreaWidgetContents > QFrame { background-color: #222; border-width: 0px; border-style: none; }

@@ -59,22 +59,22 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 
 	m_plePin = new QLineEdit;
 	m_plePin->setMaxLength(PIN_CODE_LEN);
+    m_plePin->setToolTip("Enter a mandatory 5 digit numeric PIN to unlock the form");
+    m_plePin->setStyleSheet("QLineEdit { background-color: #E86941; border: 1px solid #ffffff;}");
 	// make sure only digits are allowed
 	int iPinMax = 1;
 	for (int i = 0; i < PIN_CODE_LEN; i++)
 		iPinMax = 10*iPinMax;
 	m_plePin->setValidator(new QIntValidator(0, iPinMax-1, this));
-	// hide the output
-//	m_plePin->setEchoMode(QLineEdit::Password);
 	// make sure the pin is checked every time the value changes
 	connect(m_plePin, SIGNAL(textChanged(QString)), this, SLOT(CheckPin()));
-
-	pForm->addRow(tr("Enter %1 digit PIN code").arg(PIN_CODE_LEN), m_plePin);
+    pForm->addRow(tr("Enter %1 digit PIN code").arg(PIN_CODE_LEN), m_plePin);
 
 	if (this->mode != Encrypt) {
 		// create old password field and add it to form layout
 		m_pleOld = new QLineEdit;
 		m_pleOld->setMaxLength(MAX_PASSPHRASE_SIZE);
+        m_pleOld->setToolTip("Enter existing passphrase");
         //  Obfuscate text - just set the echo mode to Password
         m_pleOld->setEchoMode(QLineEdit::Password);
 
@@ -92,6 +92,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 		// create new password field and add it to form layout
 		m_pleNew = new QLineEdit;
 		m_pleNew->setMaxLength(MAX_PASSPHRASE_SIZE);
+        m_pleNew->setToolTip(tr("Enter new passphrase using the keypad below or keyboard, or a mixture of both"));
         //  Obfuscate text - just set the echo mode to Password
         m_pleNew->setEchoMode(QLineEdit::Password);
 		// notify the text change, so that we can enable/disable OK button
@@ -103,6 +104,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 		// create repeat new password field and add it to form layout
 		m_pleRepeated = new QLineEdit;
 		m_pleRepeated->setMaxLength(MAX_PASSPHRASE_SIZE);
+        m_pleRepeated->setToolTip(tr("Repeat your passphrase"));
         //  Obfuscate text - just set the echo mode to Password
         m_pleRepeated->setEchoMode(QLineEdit::Password);	
 		// notify the text change, so that we can enable/disable OK button
@@ -322,6 +324,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 
     //  Set minimal and maximal allowed size
     setMinimumSize(420, 620);
+    setMaximumSize(420, 620);
 
 
 }
@@ -356,12 +359,18 @@ void AskPassphraseDialog::accept()
 	newpass2.reserve(MAX_PASSPHRASE_SIZE);
 	// TODO: get rid of this .c_str() by implementing SecureString::operator=(std::string)
 	// Alternately, find a way to make this input mlock()'d to begin with.
-	if (m_pleOld != 0)
-		oldpass.assign(m_pleOld->text().toStdString().c_str());
-	if (m_pleNew != 0)
-		newpass1.assign(m_pleNew->text().toStdString().c_str());
-	if (m_pleRepeated != 0)
-		newpass2.assign(m_pleRepeated->text().toStdString().c_str());
+    if (m_pleOld != 0) {
+        QString csOld = (m_pleOld->text() + m_plePin->text());
+        oldpass.assign(csOld.toStdString().c_str());
+    }
+    if (m_pleNew != 0){
+        QString csNew = (m_pleNew->text() + m_plePin->text());
+        newpass1.assign(csNew.toStdString().c_str());
+    }
+    if (m_pleRepeated != 0){
+        QString csRepeated = (m_pleRepeated->text() + m_plePin->text());
+        newpass2.assign(csRepeated.toStdString().c_str());
+    }
 
 	switch(mode)
 	{
@@ -399,28 +408,31 @@ void AskPassphraseDialog::accept()
 					{
 						 QMessageBox::critical(this, tr("Wallet encryption failed"),
 													 tr("Wallet encryption failed due to an internal error. Your wallet was not encrypted."));
-					}
-					QDialog::accept(); // Success
+                         AskPassphraseDialog::setWindowTitle(tr("Encrypt wallet using FibreLock"));
+                    }
+                    QDialog::accept(); // Success
 			  }
 			  else
 			  {
 					QMessageBox::critical(this, tr("Wallet encryption failed"),
-												tr("The supplied passphrases do not match."));
+                                                tr("The supplied passphrases or PIN do not match."));
+                    AskPassphraseDialog::setWindowTitle(tr("Encrypt wallet using FibreLock"));
 			  }
 		 }
 		 else
 		 {
-			  QDialog::reject(); // Cancelled
+              QDialog::reject(); // Cancelled
 		 }
 		 } break;
 	case UnlockStaking:
 	case Unlock:
-            QMessageBox::information(this, tr("Running Security Checks"), tr("Running Security Checks"));
+            AskPassphraseDialog::setWindowTitle(tr("Running security checks..."));
             scrypt_salted_multiround_hash((const void*)random(14), 14, random(10), 10, 9000);
             if(!model->setWalletLocked(false, oldpass))
             {
                 QMessageBox::critical(this, tr("Wallet unlock failed"),
-                                      tr("The passphrase entered for the wallet decryption was incorrect."));
+                                      tr("The passphrase or PIN entered for the wallet decryption was incorrect."));
+                AskPassphraseDialog::setWindowTitle(tr("Unlock wallet using FibreLock"));
             }
             else
             {
@@ -433,12 +445,13 @@ void AskPassphraseDialog::accept()
             }
             break;
 	case Decrypt:
-            QMessageBox::information(this, tr("Running Security Checks"), tr("Running Security Checks"));
+         AskPassphraseDialog::setWindowTitle(tr("Running security checks..."));
          scrypt_salted_multiround_hash((const void*)random(14), 14, random(10), 10, 9000);
 		 if(!model->setWalletEncrypted(false, oldpass))
 		 {
 			  QMessageBox::critical(this, tr("Wallet decryption failed"),
-											tr("The passphrase entered for the wallet decryption was incorrect."));
+                                            tr("The passphrase or PIN entered for the wallet decryption was incorrect."));
+              AskPassphraseDialog::setWindowTitle(tr("Decrypt wallet using FibreLock"));
 		 }
 		 else
 		 {
@@ -446,7 +459,7 @@ void AskPassphraseDialog::accept()
 		 }
 		 break;
         case ChangePass:
-        QMessageBox::information(this, tr("Running Security Checks"), tr("Running Security Checks"));
+        AskPassphraseDialog::setWindowTitle(tr("Running security checks..."));
         scrypt_salted_multiround_hash((const void*)random(14), 14, random(10), 10, 9000);
 		 if(newpass1 == newpass2)
 		 {
@@ -454,18 +467,20 @@ void AskPassphraseDialog::accept()
 			  {
 					QMessageBox::information(this, tr("Wallet encrypted"),
 												tr("Wallet passphrase was successfully changed."));
-					QDialog::accept(); // Success
+                    QDialog::accept(); // Success
 			  }
 			  else
 			  {
 					QMessageBox::critical(this, tr("Wallet encryption failed"),
-												tr("The passphrase entered for the wallet decryption was incorrect."));
+                                                tr("The passphrase or PIN entered for the wallet decryption was incorrect."));
+                    AskPassphraseDialog::setWindowTitle(tr("Change passphrase using FibreLock"));
 			  }
 		 }
 		 else
 		 {
 			  QMessageBox::critical(this, tr("Wallet encryption failed"),
-										  tr("The supplied passphrases do not match."));
+                                          tr("The supplied passphrases or PIN do not match."));
+              AskPassphraseDialog::setWindowTitle(tr("Change passphrase using FibreLock"));
 		 }
 		 break;
 	}
@@ -568,17 +583,17 @@ QString AskPassphraseDialog::GetWindowTitle() const
 	QString qsTitle;
 	switch (mode) {
 	case Encrypt:
-        qsTitle = tr("Encrypt wallet using Fibre Lock ©");
+        qsTitle = tr("Encrypt wallet using FibreLock");
 		break;
 	case UnlockStaking:
 	case Unlock:
-        qsTitle = tr("Unlock wallet using Fibre Lock ©");
+        qsTitle = tr("Unlock wallet using FibreLock");
 		break;
 	case Decrypt:
-        qsTitle = tr("Decrypt wallet using Fibre Lock ©");
+        qsTitle = tr("Decrypt wallet using FibreLock");
 		break;
 	case ChangePass:
-        qsTitle = tr("Change passphrase using Fibre Lock ©");
+        qsTitle = tr("Change passphrase using FibreLock");
 		break;
 	}
 
@@ -659,7 +674,7 @@ void AskPassphraseDialog::GenerateCodes()
 	m_pFL_Button15->SetSignalText(GetRandomCode());
 	m_pFL_Button16->SetSignalText(GetRandomCode());
 
-	// enable all buttons
+    // enable all buttons and update PIN styles
 	m_pFL_Button1->setEnabled(true);
 	m_pFL_Button2->setEnabled(true);
 	m_pFL_Button3->setEnabled(true);
@@ -676,6 +691,7 @@ void AskPassphraseDialog::GenerateCodes()
 	m_pFL_Button14->setEnabled(true);
 	m_pFL_Button15->setEnabled(true);
 	m_pFL_Button16->setEnabled(true);
+    m_plePin->setStyleSheet("QLineEdit { background-color: #111111; border: 1px solid #111111;}");
 
 	if (m_pleOld != 0)
 		m_pleOld->setEnabled(true);
@@ -759,7 +775,9 @@ void AskPassphraseDialog::CheckPin()
 		GenerateCodes();
 		// disable the PIN edit. You can comment out this line, if the user
 		// should have a chance to correct the pin once it is entered
-		m_plePin->setEnabled(false);
+
+        // m_plePin->setEnabled(false);
+
 		// move focus to the next field
 		if (m_pleOld != 0)
 			m_pleOld->setFocus();
