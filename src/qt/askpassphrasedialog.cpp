@@ -61,7 +61,11 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 	m_plePin->setMaxLength(PIN_CODE_LEN);
     m_plePin->setToolTip("Enter a mandatory 5 digit numeric PIN to unlock the form");
     m_plePin->setStyleSheet("QLineEdit { background-color: #E86941; border: 1px solid #ffffff;}");
-	// make sure only digits are allowed
+    //  Set minimal and maximal allowed size
+#ifdef Q_OS_MAC
+    m_plePin->setMinimumWidth(600);
+#endif
+    // make sure only digits are allowed
 	int iPinMax = 1;
 	for (int i = 0; i < PIN_CODE_LEN; i++)
 		iPinMax = 10*iPinMax;
@@ -77,6 +81,9 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
         m_pleOld->setToolTip("Enter existing passphrase");
         //  Obfuscate text - just set the echo mode to Password
         m_pleOld->setEchoMode(QLineEdit::Password);
+#ifdef Q_OS_MAC
+        m_pleOld->setMinimumWidth(600);
+#endif
 
 		// notify the text change, so that we can enable/disable OK button
 		connect(m_pleOld, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged()));
@@ -93,6 +100,9 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 		m_pleNew = new QLineEdit;
 		m_pleNew->setMaxLength(MAX_PASSPHRASE_SIZE);
         m_pleNew->setToolTip(tr("Enter new passphrase using the keypad below or keyboard, or a mixture of both"));
+#ifdef Q_OS_MAC
+        m_pleNew->setMinimumWidth(600);
+#endif
         //  Obfuscate text - just set the echo mode to Password
         m_pleNew->setEchoMode(QLineEdit::Password);
 		// notify the text change, so that we can enable/disable OK button
@@ -105,6 +115,9 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 		m_pleRepeated = new QLineEdit;
 		m_pleRepeated->setMaxLength(MAX_PASSPHRASE_SIZE);
         m_pleRepeated->setToolTip(tr("Repeat your passphrase"));
+#ifdef Q_OS_MAC
+        m_pleRepeated->setMinimumWidth(600);
+#endif
         //  Obfuscate text - just set the echo mode to Password
         m_pleRepeated->setEchoMode(QLineEdit::Password);	
 		// notify the text change, so that we can enable/disable OK button
@@ -323,8 +336,15 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
 
 
     //  Set minimal and maximal allowed size
+    //  Set minimal and maximal allowed size
+#ifdef Q_OS_MAC
+    setMinimumSize(430, 635);
+    setMaximumSize(430, 635);
+#else
     setMinimumSize(420, 620);
     setMaximumSize(420, 620);
+#endif
+
 
 
 }
