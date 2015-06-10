@@ -366,7 +366,6 @@ HEADERS += src/qt/bitcoingui.h \
     src/allocators.h \
     src/ui_interface.h \
     src/qt/rpcconsole.h \
-    src/qt/plugins/mrichtexteditor/mrichtextedit.h \
     src/qt/qvalidatedtextedit.h \
     src/version.h \
     src/netbase.h \
@@ -406,7 +405,6 @@ SOURCES += src/qt/bitcoin.cpp \
     src/qt/editaddressdialog.cpp \
     src/qt/bitcoinaddressvalidator.cpp \
     src/qt/qvalidatedtextedit.cpp \
-    src/qt/plugins/mrichtexteditor/mrichtextedit.cpp \
     src/alert.cpp \
     src/version.cpp \
     src/sync.cpp \
