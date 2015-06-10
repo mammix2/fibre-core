@@ -8,10 +8,7 @@ VERSION = 3.7.0.3
 TARGET = $$FN1$$FN2
 INCLUDEPATH += src src/json \
     src/qt \
-    src/tor \
-    src/qt/plugins/mrichtexteditor \
-    src/xxhash \
-    src/lz4
+    src/tor
 QT += core gui network
 DEFINES += QT_GUI BOOST_THREAD_USE_LIB BOOST_SPIRIT_THREADSAFE
 CONFIG += no_include_pwd
