@@ -334,8 +334,6 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
     // assign the style sheet to the entire dialog
     setStyleSheet(qsAll);
 
-
-    //  Set minimal and maximal allowed size
     //  Set minimal and maximal allowed size
 #ifdef Q_OS_MAC
     setMinimumSize(430, 635);
