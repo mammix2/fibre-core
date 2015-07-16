@@ -4,7 +4,7 @@ TEMPLATE = app
 DEFINES += FN1 FN2
 FN1 = Fibre
 FN2 = -Qt
-VERSION = 3.7.0.3
+VERSION = 3.8.0.0
 TARGET = $$FN1$$FN2
 INCLUDEPATH += src src/json \
     src/qt \

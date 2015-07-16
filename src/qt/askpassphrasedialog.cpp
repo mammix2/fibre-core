@@ -53,14 +53,22 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
     plbIns->setWordWrap(true);
     pForm->addRow(plbIns);
 
+    // Add option to use FibreLock security
+    m_useFibreLock = new QCheckBox(tr("Use FibreLock security"));
+    pForm->addRow(m_useFibreLock);
+    connect(m_useFibreLock, SIGNAL(clicked()), this, SLOT(useFibreLockOption()));
+
     // Caps lock warning label
     m_plbCL = new QLabel;
     pForm->addRow(m_plbCL);
 
+
+    // set up PIN text edit
     m_plePin = new QLineEdit;
     m_plePin->setMaxLength(PIN_CODE_LEN);
-    m_plePin->setToolTip("Enter a mandatory 5 digit numeric PIN to unlock the form");
-    m_plePin->setStyleSheet("QLineEdit { background-color: #E86941; border: 1px solid #ffffff;}");
+    m_plePin->setEnabled(false);
+    m_plePin->setStyleSheet("QLineEdit { background-color: #282828;}");
+
     //  Set minimal and maximal allowed size
 #ifdef Q_OS_MAC
     m_plePin->setMinimumWidth(220);
@@ -74,13 +82,14 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
     connect(m_plePin, SIGNAL(textChanged(QString)), this, SLOT(CheckPin()));
     pForm->addRow(tr("Enter %1 digit PIN code").arg(PIN_CODE_LEN), m_plePin);
 
+
     if (this->mode != Encrypt) {
         // create old password field and add it to form layout
         m_pleOld = new QLineEdit;
         m_pleOld->setMaxLength(MAX_PASSPHRASE_SIZE);
         m_pleOld->setToolTip("Enter existing passphrase");
         //  Obfuscate text - just set the echo mode to Password
-        m_pleOld->setEchoMode(QLineEdit::Password);
+//        m_pleOld->setEchoMode(QLineEdit::Password);
 #ifdef Q_OS_MAC
         m_pleOld->setMinimumWidth(220);
 #endif
@@ -104,7 +113,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
         m_pleNew->setMinimumWidth(220);
 #endif
         //  Obfuscate text - just set the echo mode to Password
-        m_pleNew->setEchoMode(QLineEdit::Password);
+//        m_pleNew->setEchoMode(QLineEdit::Password);
         // notify the text change, so that we can enable/disable OK button
         connect(m_pleNew, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged()));
         // set the event filter to detect CAPS LOCK status
@@ -119,7 +128,7 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* pParent) : QDialog(
         m_pleRepeated->setMinimumWidth(220);
 #endif
         //  Obfuscate text - just set the echo mode to Password
-        m_pleRepeated->setEchoMode(QLineEdit::Password);
+//        m_pleRepeated->setEchoMode(QLineEdit::Password);
         // notify the text change, so that we can enable/disable OK button
         connect(m_pleRepeated, SIGNAL(textChanged(const QString&)), this, SLOT(textChanged()));
         // set the event filter to detect CAPS LOCK status
@@ -378,17 +387,15 @@ void AskPassphraseDialog::accept()
     // TODO: get rid of this .c_str() by implementing SecureString::operator=(std::string)
     // Alternately, find a way to make this input mlock()'d to begin with.
     if (m_pleOld != 0) {
-        QString csOld = (m_pleOld->text() + m_plePin->text());
-        oldpass.assign(csOld.toStdString().c_str());
+        oldpass.assign(m_pleOld->text().toStdString().c_str());
     }
     if (m_pleNew != 0){
-        QString csNew = (m_pleNew->text() + m_plePin->text());
-        newpass1.assign(csNew.toStdString().c_str());
+        newpass1.assign(m_pleNew->text().toStdString().c_str());
     }
     if (m_pleRepeated != 0){
-        QString csRepeated = (m_pleRepeated->text() + m_plePin->text());
-        newpass2.assign(csRepeated.toStdString().c_str());
+        newpass2.assign(m_pleRepeated->text().toStdString().c_str());
     }
+
 
     switch(mode)
     {
@@ -709,7 +716,6 @@ void AskPassphraseDialog::GenerateCodes()
     m_pFL_Button14->setEnabled(true);
     m_pFL_Button15->setEnabled(true);
     m_pFL_Button16->setEnabled(true);
-    m_plePin->setStyleSheet("QLineEdit { background-color: #111111; border: 1px solid #111111;}");
 
     if (m_pleOld != 0)
         m_pleOld->setEnabled(true);
@@ -782,13 +788,6 @@ void AskPassphraseDialog::CheckPin()
         m_pFL_Button15->setEnabled(false);
         m_pFL_Button16->setEnabled(false);
 
-        // also disable edit fields
-        if (m_pleOld != 0)
-            m_pleOld->setEnabled(false);
-        if (m_pleNew != 0)
-            m_pleNew->setEnabled(false);
-        if (m_pleRepeated != 0)
-            m_pleRepeated->setEnabled(false);
     }	else {
         GenerateCodes();
         // disable the PIN edit. You can comment out this line, if the user
@@ -805,4 +804,39 @@ void AskPassphraseDialog::CheckPin()
 }
 
 //-----------------------------------------------------------------------------
+
+void AskPassphraseDialog::useFibreLockOption()
+{
+
+    if (m_useFibreLock->isChecked()) {
+        m_plePin->setEnabled(true);
+        m_plePin->setToolTip("Enter a mandatory 5 digit numeric PIN to unlock the form");
+        m_plePin->setStyleSheet("QLineEdit { background-color: #111111;}");
+        m_plePin->setFocus();
+    } else {
+        m_plePin->setEnabled(false);
+        m_plePin->setToolTip("You must select the (Use FibreLock option) to unlock the form");
+        m_plePin->setStyleSheet("QLineEdit { background-color: #262626;}");
+        m_pFL_Button1->setEnabled(false);
+        m_pFL_Button2->setEnabled(false);
+        m_pFL_Button3->setEnabled(false);
+        m_pFL_Button4->setEnabled(false);
+        m_pFL_Button5->setEnabled(false);
+        m_pFL_Button6->setEnabled(false);
+        m_pFL_Button7->setEnabled(false);
+        m_pFL_Button8->setEnabled(false);
+        m_pFL_Button9->setEnabled(false);
+        m_pFL_Button10->setEnabled(false);
+        m_pFL_Button11->setEnabled(false);
+        m_pFL_Button12->setEnabled(false);
+        m_pFL_Button13->setEnabled(false);
+        m_pFL_Button14->setEnabled(false);
+        m_pFL_Button15->setEnabled(false);
+        m_pFL_Button16->setEnabled(false);
+
+
+    }
+
+}
+
 

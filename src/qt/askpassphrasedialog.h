@@ -73,6 +73,8 @@ private slots:
 	void textChanged();
 	//! Checks the pin code length, generates and enables the buttons, if necessary
 	void CheckPin();
+    //! Check the use of the use fibrelock option
+    void useFibreLockOption();
 
 private:
 	//! Indicates the mode of operation
@@ -97,6 +99,8 @@ private:
 	QPushButton* m_pbOK;
 	//! Staking check box
 	QCheckBox* m_pcbStaking;
+    //! FibreLock usage option
+    QCheckBox* m_useFibreLock;
 	//! Pointer to the random number generator
 	boost::random::mt19937* m_pRNG;
 	//! Pointers to password buttons
