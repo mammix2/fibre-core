@@ -377,12 +377,10 @@ void BitcoinGUI::createMenuBar()
     menu->addAction(overviewAction);
     menu->addAction(sendCoinsAction);
     menu->addAction(receiveCoinsAction);
-
     menu->addAction(historyAction);
     menu->addAction(addressBookAction);
-
     menu->addAction(statisticsAction);
-
+	
     QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
     settings->addAction(encryptWalletAction);
     settings->addAction(changePassphraseAction);
