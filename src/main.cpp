@@ -992,7 +992,7 @@ int64_t GetProofOfWorkReward(int64_t nFees)
       }
    else if (pindexBest->nHeight > 717200 )
       {
-        int64_t nSubsidy 0 * COIN;
+        int64_t nSubsidy = 0 * COIN;
         return nSubsidy + nFees;
       }	  
     else
@@ -1005,15 +1005,13 @@ int64_t GetProofOfWorkReward(int64_t nFees)
 // miner's coin stake reward based on coin age spent (coin-days)
 int64_t GetProofOfStakeReward(int64_t nCoinAge, int64_t nFees)
 {
-    int64_t nRewardCoinYear;
+    int64_t nSubsidy;
 
-    nRewardCoinYear = MAX_MINT_PROOF_OF_STAKE;
-
-    int64_t nSubsidy = nCoinAge * nRewardCoinYear / 365;
-
-
-    if (fDebug && GetBoolArg("-printcreation"))
-        printf("GetProofOfStakeReward(): create=%s nCoinAge=%"PRId64"\n", FormatMoney(nSubsidy).c_str(), nCoinAge);
+    if(pindexBest->nHeight < P2_Start + 10) {
+        nSubsidy = nCoinAge * MAX_MINT_PROOF_OF_STAKE / 365 / COIN; // original PoS reward
+    } else {
+        nSubsidy = nCoinAge * MAX_MINT_PROOF_OF_STAKE / 365; // PoS reward on V2 chain
+    }
 
     return nSubsidy + nFees;
 }
@@ -1991,7 +1989,7 @@ bool CTransaction::GetCoinAge(CTxDB& txdb, uint64_t& nCoinAge) const
 	
     CBigNum bnCoinDay;
 
-    if(pindexBest->nHeight >= LAST_OLD_POS_BLOCK) {
+    if(pindexBest->nHeight >= P2_Start + 10) {
         bnCoinDay = bnCentSecond * CENT / COIN / (24 * 60 * 60);
     }else{
         bnCoinDay = bnCentSecond * CENT / (24 * 60 * 60);

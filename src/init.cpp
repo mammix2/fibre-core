@@ -437,13 +437,13 @@ bool AppInit2()
     if (fDebug)
     {
         fDebugNet  = true;
-        fDebugSmsg = true;
+
     } else
     {
         fDebugNet  = GetBoolArg("-debugnet");
-        fDebugSmsg = GetBoolArg("-debugsmsg");
+
     }
-    fNoSmsg = GetBoolArg("-nosmsg");
+
     
     bitdb.SetDetach(GetBoolArg("-detachdb", false));
 
