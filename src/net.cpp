@@ -1185,19 +1185,13 @@ void MapPort()
 // The first name is used as information source for addrman.
 // The second name should resolve to a list of seed addresses.
 static const char *strDNSSeed[][2] = {
-    {"seed1.worldfibre.net", "seed1.worldfibre.net"},
-    {"seed2.worldfibre.net", "seed2.worldfibre.net"},
-    {"seed3.worldfibre.net", "seed3.worldfibre.net"},
-    {"seed4.worldfibre.net", "seed4.worldfibre.net"},
-    {"seed5.worldfibre.net", "seed5.worldfibre.net"},
+    {"seed1.worldfibre.net", "seed1.worldfibre.net"}, //needs updating to valid nodes
 };
 
 // hidden service seeds
 static const char *strMainNetOnionSeed[][1] = {
-    {"uzcmg4inzuib6dy4.onion"}, // node 04 (native)
-    {"gpusv763w2pfpgh7.onion"}, // node 03 (hybrid)
-    {"yfvwnhwwffpvgxba.onion"}, // node 02 (hybrid)
-    {"sy437vznky2xjjwa.onion"}, // node 05 (native)
+    {"y7w2ura7quywqkxn.onion"}, // initial Seed node
+
     {NULL}
 };
 
