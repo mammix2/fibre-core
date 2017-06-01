@@ -19,6 +19,7 @@
 #include "addresstablemodel.h"
 #include "transactionview.h"
 #include "overviewpage.h"
+#include "statisticspage.h"
 #include "bitcoinunits.h"
 #include "guiconstants.h"
 #include "askpassphrasedialog.h"
@@ -78,8 +79,18 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     notificator(0),
     rpcConsole(0)
 {
-    resize(1050, 600);
-    setWindowTitle(tr("Fibre") + " - " +("Currency"));
+
+#ifdef Q_OS_MAC
+    resize(1040, 610);
+    setWindowTitle(tr("Fibre Core wallet - Mac"));
+#elif _WIN32
+    resize(945, 600);
+    setWindowTitle(tr("Fibre Core wallet - Windows"));
+#else
+    resize(1110, 650);
+    setWindowTitle(tr("Fibre Core wallet - Linux"));
+#endif
+
 
 
 #ifndef Q_OS_MAC
@@ -756,6 +767,8 @@ void BitcoinGUI::gotoOverviewPage()
 
     exportAction->setEnabled(false);
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
+}
+
 void BitcoinGUI::gotoStatisticsPage()
 {
     statisticsAction->setChecked(true);
@@ -763,7 +776,6 @@ void BitcoinGUI::gotoStatisticsPage()
 
     exportAction->setEnabled(false);
     disconnect(exportAction, SIGNAL(triggered()), 0, 0);
-}
 }
 
 void BitcoinGUI::gotoHistoryPage()
