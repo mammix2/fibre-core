@@ -6,6 +6,7 @@
 #include "base58.h"
 #include "clientmodel.h"
 #include "bitcoinrpc.h"
+#include "pow_control.h"
 #include <sstream>
 #include <string>
 
@@ -47,39 +48,33 @@ void StatisticsPage::updateStatistics()
     int pPawrate = GetPoWMHashPS();
     double pPawrate2 = 0.000;
     int nHeight = pindexBest->nHeight;
-    double nSubsidy = 25;
     uint64_t nMinWeight = 0, nMaxWeight = 0, nWeight = 0;
     pwalletMain->GetStakeWeight(*pwalletMain, nMinWeight, nMaxWeight, nWeight);
     uint64_t nNetworkWeight = GetPoSKernelPS();
-    int64_t volume = ((pindexBest->nMoneySupply)/100000000);
+    int64 volume = ((pindexBest->nMoneySupply)/100000000);
     int peers = this->model->getNumConnections();
     pPawrate2 = (double)pPawrate;
     QString height = QString::number(nHeight);
     QString stakemin = QString::number(nMinWeight);
     QString stakemax = QString::number(nNetworkWeight);
     QString phase = "";
-    QString LastPoWBlock = QString::number(LAST_POW_BLOCK);
 
-    ui->labelPhasePoW->setText("PoW = Block 0 - " + LastPoWBlock);
-    ui->labelPhasePoS->setText("PoS = Block " + LastPoWBlock + " - onwards");
-
-
-    if (pindexBest->nHeight < LAST_POW_BLOCK)
+    if (pindexBest->nHeight < (!fTestNet ? P2_End : P2_End_TestNet))
     {
-        phase = "Proof of Work";
+        phase = "Hybrid PoW + PoS";
     }
     else
     {
         phase = "Proof of Stake";
     }
-    QString subsidy = QString::number(nSubsidy, 'f', 6);
-    QString hardness = QString::number(pHardness, 'f', 6);
-    QString hardness2 = QString::number(pHardness2, 'f', 6);
+
+    QString hardness = QString::number(pHardness, 'f', 8);
+    QString hardness2 = QString::number(pHardness2, 'f', 8);
     QString pawrate = QString::number(pPawrate2, 'f', 3);
     QString Qlpawrate = model->getLastBlockDate().toString();
 
     QString QPeers = QString::number(peers);
-    QString qVolume = QString::number(volume);
+    QString qVolume = QLocale(QLocale::English).toString(volume);
 
     if(nHeight > heightPrevious)
     {
@@ -108,13 +103,6 @@ void StatisticsPage::updateStatistics()
     ui->cBox->setText(phase);
     }
 
-    
-    if(nSubsidy < rewardPrevious)
-    {
-        ui->rewardBox->setText("<b><font color=\"red\">" + subsidy + "</font></b>");
-    } else {
-    ui->rewardBox->setText(subsidy);
-    }
     
     if(pHardness > hardnessPrevious)
     {
@@ -176,7 +164,6 @@ void StatisticsPage::updatePrevious(int nHeight, int nMinWeight, int nNetworkWei
     stakeminPrevious = nMinWeight;
     stakemaxPrevious = nNetworkWeight;
     stakecPrevious = phase;
-    rewardPrevious = nSubsidy;
     hardnessPrevious = pHardness;
     hardnessPrevious2 = pHardness2;
     netPawratePrevious = pPawrate2;
@@ -189,7 +176,6 @@ void StatisticsPage::setModel(ClientModel *model)
 {
     updateStatistics();
     this->model = model;
-
 }
 
 

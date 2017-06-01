@@ -190,7 +190,8 @@ SOURCES += src/blake.c \
 
 	
 ### tor sources
-SOURCES +=     src/tor/address.c \
+SOURCES += src/tor/anonymize.cpp \
+    src/tor/address.c \
     src/tor/addressmap.c \
     src/tor/aes.c \
     src/tor/backtrace.c \
@@ -243,7 +244,6 @@ SOURCES +=     src/tor/address.c \
     src/tor/onion_ntor.c \
     src/tor/onion_tap.c \
     src/tor/policies.c \
-    src/tor/anonymize.cpp \
     src/tor/procmon.c \
     src/tor/reasons.c \
     src/tor/relay.c \
@@ -339,6 +339,7 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/aboutdialog.h \
     src/qt/editaddressdialog.h \
     src/qt/bitcoinaddressvalidator.h \
+    src/qt/statisticspage.h \
     src/alert.h \
     src/addrman.h \
     src/base58.h \
@@ -404,7 +405,6 @@ HEADERS += src/qt/bitcoingui.h \
     src/allocators.h \
     src/ui_interface.h \
     src/qt/rpcconsole.h \
-    src/qt/qvalidatedtextedit.h \
     src/version.h \
     src/netbase.h \
     src/clientversion.h \
@@ -440,7 +440,7 @@ SOURCES += src/qt/bitcoin.cpp \
     src/qt/aboutdialog.cpp \
     src/qt/editaddressdialog.cpp \
     src/qt/bitcoinaddressvalidator.cpp \
-    src/qt/qvalidatedtextedit.cpp \
+    src/qt/statisticspage.cpp \
     src/alert.cpp \
     src/version.cpp \
     src/sync.cpp \
@@ -516,7 +516,7 @@ FORMS += \
     src/qt/forms/sendcoinsentry.ui \
     src/qt/forms/askpassphrasedialog.ui \
     src/qt/forms/rpcconsole.ui \
-    src/qt/forms/optionsdialog.ui
+    src/qt/forms/optionsdialog.ui \
     src/qt/forms/statisticspage.ui \
 
 contains(USE_QRCODE, 1) {

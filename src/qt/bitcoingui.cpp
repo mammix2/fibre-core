@@ -58,6 +58,9 @@
 #include <QDragEnterEvent>
 #include <QUrl>
 #include <QStyle>
+#include <QStyleFactory>
+#include <QTextStream>
+#include <QTextDocument>
 
 #include <iostream>
 
@@ -406,7 +409,8 @@ void BitcoinGUI::createToolBars(QToolBar* toolbar)
     toolbar->addAction(historyAction);
     toolbar->addAction(addressBookAction);
     toolbar->addAction(statisticsAction);
-    toolbar->addAction(exportAction);
+
+//    toolbar->addAction(exportAction);
 
 //    QToolBar *toolbar2 = addToolBar(tr("Actions toolbar"));
 //    toolbar2->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
