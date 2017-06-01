@@ -990,6 +990,11 @@ int64_t GetProofOfWorkReward(int64_t nFees)
         int64_t nSubsidy = 8 * COIN;
         return nSubsidy + nFees;
       }
+   else if (pindexBest->nHeight > 717200 )
+      {
+        int64_t nSubsidy 0 * COIN;
+        return nSubsidy + nFees;
+      }	  
     else
     {
         int64_t nSubsidy = 25 * COIN;
@@ -1983,7 +1988,14 @@ bool CTransaction::GetCoinAge(CTxDB& txdb, uint64_t& nCoinAge) const
             printf("coin age nValueIn=%"PRId64" nTimeDiff=%d bnCentSecond=%s\n", nValueIn, nTime - txPrev.nTime, bnCentSecond.ToString().c_str());
     }
 
-    CBigNum bnCoinDay = bnCentSecond * CENT / COIN / (24 * 60 * 60);
+	
+    CBigNum bnCoinDay;
+
+    if(pindexBest->nHeight >= LAST_OLD_POS_BLOCK) {
+        bnCoinDay = bnCentSecond * CENT / COIN / (24 * 60 * 60);
+    }else{
+        bnCoinDay = bnCentSecond * CENT / (24 * 60 * 60);
+    }
 
     if (fDebug && GetBoolArg("-printcoinage"))
         printf("coin age bnCoinDay=%s\n", bnCoinDay.ToString().c_str());
@@ -2190,14 +2202,14 @@ bool CBlock::AcceptBlock()
 
     if (IsProofOfWork()){
         if (GetBoolArg("-testnet")){
-            if (nHeight > RP1_End_TestNet && nHeight < P1_Start_TestNet){
+            if (nHeight > P1_End_TestNet && nHeight < P2_Start_TestNet){
                 return DoS(100, error("AcceptBlock() : reject proof-of-work at height %d", nHeight));
             }
             else if (nHeight > P2_End_TestNet){
                 return DoS(100, error("AcceptBlock() : reject proof-of-work at height %d", nHeight));
             }
         }else{
-            if (nHeight > RP1_End && nHeight < P1_Start){
+            if (nHeight > P1_End && nHeight < P2_Start){
                 return DoS(100, error("AcceptBlock() : reject proof-of-work at height %d", nHeight));
             }
             else if (nHeight > P2_End){
