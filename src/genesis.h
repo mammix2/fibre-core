@@ -17,6 +17,7 @@ static const uint256 CheckBlock6 ("12cc1ec8a0ba25ca6db18283145e9bcde6e250ef28113
 static const uint256 CheckBlock7 ("1d9129bb22d7eec87a71607fcc19dddda45d359fb243e2957d81d5f5127fbb8c"); // Checkpoint at block 73000
 static const uint256 CheckBlock8 ("75c03ef922d50f66c255bc72aee2d4a57bf6359a34e3213bcaf34adf4a24435a"); // Checkpoint at block 80000
 static const uint256 CheckBlock9 ("af2c40c1479633c9180ff965a01f3f7a4d5c7e161456c5ca427c77a2c8c65c99"); // Checkpoint at block 210900
+static const uint256 CheckBlock10 ("ea4ec1bff279fff4d57ca4dc20e835ce043885c089d85d7f55c8f2b8e73ce669"); // Checkpoint at block 673600
 
 // TODO: Move Kernel checksum in here
 
