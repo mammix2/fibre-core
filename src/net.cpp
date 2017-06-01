@@ -25,7 +25,9 @@
 using namespace std;
 using namespace boost;
 
-extern "C" { int tor_main(int argc, char *argv[]); }
+extern "C" {
+    int tor_main(int argc, char *argv[]);
+}
 
 static const int MAX_OUTBOUND_CONNECTIONS = 16;
 
@@ -53,7 +55,7 @@ struct LocalServiceInfo {
 bool fClient = false;
 bool fDiscover = true;
 bool fUseUPnP = false;
-bool fDarkEnabled = false;
+int fDarkEnabled = 1;
 uint64_t nLocalServices = (fClient ? 0 : NODE_NETWORK);
 static CCriticalSection cs_mapLocalHost;
 static map<CNetAddr, LocalServiceInfo> mapLocalHost;
@@ -62,7 +64,7 @@ static bool vfLimited[NET_MAX] = {};
 static CNode* pnodeLocalHost = NULL;
 CAddress addrSeenByPeer(CService("0.0.0.0", 0), nLocalServices);
 uint64_t nLocalHostNonce = 0;
-array<int, THREAD_MAX> vnThreadsRunning;
+boost::array<int, THREAD_MAX> vnThreadsRunning;
 static std::vector<SOCKET> vhListenSocket;
 CAddrMan addrman;
 
@@ -1058,11 +1060,16 @@ void ThreadMapPort2(void* parg)
 #ifndef UPNPDISCOVER_SUCCESS
     /* miniupnpc 1.5 */
     devlist = upnpDiscover(2000, multicastif, minissdpdpath, 0);
-#else
+#elif MINIUPNPC_API_VERSION < 14
     /* miniupnpc 1.6 */
     int error = 0;
     devlist = upnpDiscover(2000, multicastif, minissdpdpath, 0, 0, &error);
+#else
+    /* miniupnpc 1.9.20150730 */
+    int error = 0;
+    devlist = upnpDiscover(2000, multicastif, minissdpdpath, 0, 0, 2, &error);
 #endif
+
 
     struct UPNPUrls urls;
     struct IGDdatas data;
@@ -1951,9 +1958,8 @@ void StartNode(void* parg)
         if (!NewThread(ThreadDNSAddressSeed, NULL))
             printf("Error: NewThread(ThreadDNSAddressSeed) failed\n");
 
-    int isfDark = GetArg("-fibredark", 1);
 	
-    if (!(isfDark == 1) || (fDarkEnabled != 1))
+    if ((fDarkEnabled == 0))
         	printf(".onion seeding disabled\n");
     else
         if (!NewThread(ThreadOnionSeed, NULL))

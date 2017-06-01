@@ -405,7 +405,6 @@ bool AppInit2()
         // when only connecting to trusted nodes, do not seed via DNS, Tor, or listen by default
         SoftSetBoolArg("-dnsseed", false);
         SoftSetBoolArg("-listen", false);
-//        SoftSetArg("-fibredark", 0);
     }
 
     if (mapArgs.count("-proxy")) {
@@ -435,10 +434,15 @@ bool AppInit2()
 
     // -debug implies fDebug*
     if (fDebug)
+    {
         fDebugNet  = true;
-    else
+        fDebugSmsg = true;
+    } else
+    {
         fDebugNet  = GetBoolArg("-debugnet");
-
+        fDebugSmsg = GetBoolArg("-debugsmsg");
+    }
+    fNoSmsg = GetBoolArg("-nosmsg");
     
     bitdb.SetDetach(GetBoolArg("-detachdb", false));
 

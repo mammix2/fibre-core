@@ -378,9 +378,7 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/macnotificationhandler.h \
     src/threadsafety.h \
     src/txdb-leveldb.h \ 
-    src/genesis.h \
-    src/qt/PasswordPushButton.h \
-    src/qt/RandomGridLayout.h
+    src/genesis.h
 	
 ##hashing headers	
 HEADERS += src/sph_blake.h \
@@ -463,9 +461,7 @@ SOURCES += src/qt/bitcoin.cpp \
     src/pbkdf2.cpp \
     src/txdb-leveldb.cpp \
     src/json/json_spirit_reader.cpp \
-    src/json/json_spirit_writer.cpp \
-    src/qt/PasswordPushButton.cpp \
-    src/qt/RandomGridLayout.cpp
+    src/json/json_spirit_writer.cpp 
 
 RESOURCES += \
     src/qt/bitcoin.qrc
@@ -480,6 +476,7 @@ FORMS += \
     src/qt/forms/transactiondescdialog.ui \
     src/qt/forms/overviewpage.ui \
     src/qt/forms/sendcoinsentry.ui \
+    src/qt/forms/askpassphrasedialog.ui \
     src/qt/forms/rpcconsole.ui \
     src/qt/forms/optionsdialog.ui
 
