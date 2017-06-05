@@ -50,12 +50,12 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
     ui->proxyIp->installEventFilter(this);
 
-    if (fDarkEnabled == 1 ) {
+    if (fTorEnabled == 1 ) {
         ui->connectSocks->setEnabled(false);
         ui->proxyIp->setEnabled(false);
         ui->proxyPort->setEnabled(false);
         ui->socksVersion->setEnabled(false);
-        ui->connectTorProxy->setChecked(true);
+        ui->connectFibreDark->setChecked(true);
     }
 
     /* Window elements init */
