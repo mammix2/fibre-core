@@ -1,8 +1,8 @@
 // Copyright (c) 2012-2013 The Fibre developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
-#ifndef Fibre_KERNEL_H
-#define Fibre_KERNEL_H
+#ifndef FIBRE_KERNEL_H
+#define FIBRE_KERNEL_H
 
 #include "main.h"
 

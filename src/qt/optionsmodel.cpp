@@ -146,7 +146,7 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
         case MapPortUPnP:
             return settings.value("fUseUPnP", GetBoolArg("-upnp", true));
         case FibreDarkEnabled:
-            return settings.value("fDarkEnabled", GetBoolArg("-fibredark", false));
+            return settings.value("fDarkEnabled", GetArg("-fibredark", 1));
         case MinimizeOnClose:
             return QVariant(fMinimizeOnClose);
         case ProxyUse:

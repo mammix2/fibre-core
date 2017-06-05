@@ -55,6 +55,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
         ui->proxyIp->setEnabled(false);
         ui->proxyPort->setEnabled(false);
         ui->socksVersion->setEnabled(false);
+        ui->connectTorProxy->setChecked(true);
     }
 
     /* Window elements init */

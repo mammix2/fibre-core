@@ -55,7 +55,7 @@ struct LocalServiceInfo {
 bool fClient = false;
 bool fDiscover = true;
 bool fUseUPnP = false;
-int fDarkEnabled = 1;
+int fTorEnabled = 1;
 uint64_t nLocalServices = (fClient ? 0 : NODE_NETWORK);
 static CCriticalSection cs_mapLocalHost;
 static map<CNetAddr, LocalServiceInfo> mapLocalHost;
@@ -1185,7 +1185,17 @@ void MapPort()
 // The first name is used as information source for addrman.
 // The second name should resolve to a list of seed addresses.
 static const char *strDNSSeed[][2] = {
-    {"seed1.worldfibre.net", "seed1.worldfibre.net"}, //needs updating to valid nodes
+    {"fibre1.bost.link", "fibre1.bost.link"},
+    {"fibre2.bost.link", "fibre2.bost.link"},
+    {"fibre3.bost.link", "fibre3.bost.link"},
+    {"fibre4.bost.link", "fibre4.bost.link"},
+    {"fibre5.bost.link", "fibre5.bost.link"},
+    {"fibre6.bost.link", "fibre6.bost.link"},
+    {"fibre7.bost.link", "fibre7.bost.link"},
+    {"fibre8.bost.link", "fibre8.bost.link"},
+    {"fibre9.bost.link", "fibre9.bost.link"},
+    {"fibre10.bost.link", "fibre10.bost.link"},
+	
 };
 
 // hidden service seeds
@@ -1953,7 +1963,7 @@ void StartNode(void* parg)
             printf("Error: NewThread(ThreadDNSAddressSeed) failed\n");
 
 	
-    if ((fDarkEnabled == 0))
+    if ((fTorEnabled == 0))
         	printf(".onion seeding disabled\n");
     else
         if (!NewThread(ThreadOnionSeed, NULL))

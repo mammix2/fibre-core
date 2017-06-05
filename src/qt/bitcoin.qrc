@@ -65,6 +65,7 @@
         <file alias="FL_ButtonImage14">res/icons/fl/FL_ButtonImage14.png</file>
         <file alias="FL_ButtonImage15">res/icons/fl/FL_ButtonImage15.png</file>
         <file alias="FL_ButtonImage16">res/icons/fl/FL_ButtonImage16.png</file>
+        <file alias="onion_small">res/icons/onion_logo_16x16.png</file>	
     </qresource>
     <qresource prefix="/images">
         <file alias="about">res/images/about.png</file>

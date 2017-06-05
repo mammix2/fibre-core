@@ -27,12 +27,15 @@
 #include "guiutil.h"
 #include "rpcconsole.h"
 #include "wallet.h"
+#include "init.h"
+#include "net.h"
 
 #ifdef Q_OS_MAC
 #include "macdockiconhandler.h"
 #endif
 
 #include <QApplication>
+#include <QNetworkRequest>
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QMenu>
@@ -178,11 +181,14 @@ BitcoinGUI::BitcoinGUI(QWidget *parent):
     labelEncryptionIcon = new QLabel();
     labelStakingIcon = new QLabel();
     labelConnectionsIcon = new QLabel();
+    labelOnionIcon = new QLabel ();
     labelBlocksIcon = new QLabel();
     frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelEncryptionIcon);
     frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelStakingIcon);
+    frameBlocksLayout->addStretch();
+    frameBlocksLayout->addWidget(labelOnionIcon);
     frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelConnectionsIcon);
     frameBlocksLayout->addStretch();
@@ -566,6 +572,15 @@ void BitcoinGUI::setNumConnections(int count)
     }
     labelConnectionsIcon->setPixmap(QIcon(icon).pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
     labelConnectionsIcon->setToolTip(tr("%n active connection(s) to Fibre network", "", count));
+
+
+    if (fTorEnabled)
+    {
+        labelOnionIcon->setPixmap(QIcon(":/icons/onion_small").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
+        labelOnionIcon->setToolTip(tr("Connected to the Tor network"));
+    }
+
+
 }
 
 void BitcoinGUI::setNumBlocks(int count, int nTotalBlocks)
