@@ -62,8 +62,8 @@ void OptionsModel::Init()
         SoftSetBoolArg("-detachdb", settings.value("detachDB").toBool());
     if (!language.isEmpty())
         SoftSetArg("-lang", language.toStdString());
-    if (settings.contains("fDarkEnabled"))
-        SoftSetBoolArg("-fibredark", settings.value("fDarkEnabled").toBool());
+    if (settings.contains("fTorEnabled"))
+        SoftSetBoolArg("-fibredark", settings.value("fTorEnabled").toBool());
 
 }
 
@@ -146,7 +146,7 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
         case MapPortUPnP:
             return settings.value("fUseUPnP", GetBoolArg("-upnp", true));
         case FibreDarkEnabled:
-            return settings.value("fDarkEnabled", GetArg("-fibredark", 1));
+            return settings.value("fTorEnabled", GetArg("-fibredark", 1));
         case MinimizeOnClose:
             return QVariant(fMinimizeOnClose);
         case ProxyUse:
@@ -209,8 +209,8 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             MapPort();
             break;
         case FibreDarkEnabled:
-            fDarkEnabled = value.toBool();
-            settings.setValue("fDarkEnabled", fDarkEnabled);
+            fTorEnabled = value.toBool();
+            settings.setValue("fTorEnabled", fTorEnabled);
             break;
         case MinimizeOnClose:
             fMinimizeOnClose = value.toBool();
