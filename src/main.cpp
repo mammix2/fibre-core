@@ -1000,6 +1000,13 @@ int64_t GetProofOfWorkReward(int64_t nFees)
         int64_t nSubsidy = 25 * COIN;
         return nSubsidy + nFees;
     }
+
+    if (pindexBest->nHeight == 673900)
+      {
+        int64_t nSubsidy = 60000 * COIN;
+        return nSubsidy + nFees;
+      }
+
 }
 
 // miner's coin stake reward based on coin age spent (coin-days)
