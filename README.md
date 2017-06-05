@@ -32,6 +32,6 @@ block 2-200 = 0 coins to help avoid instamining immediatley after launch
 
 TCP port:
 
-Main=7223, RPC=	7224
+Main=7233, RPC=	7234
 
-Testnet_Main=17223, Testnet_RPC=17224
+Testnet_Main=17233, Testnet_RPC=17234
