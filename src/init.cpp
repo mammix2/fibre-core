@@ -38,7 +38,7 @@ unsigned int nMinerSleep;
 bool fUseFastIndex;
 enum Checkpoints::CPMode CheckpointsMode;
 CService addrOnion;
-unsigned short const onion_port = 9076;
+unsigned short const onion_port = 9086;
 
 
 //////////////////////////////////////////////////////////////////////////////
