@@ -57,11 +57,11 @@ static const int64_t nTargetTimespan_legacy = nTargetSpacing * nRetarget; // eve
 static const int64_t nInterval = nTargetTimespan_legacy / nTargetSpacing;
 
 
-int64_t devCoin = 0 * COIN;
+
 int nCoinbaseMaturity = 100;
 CBlockIndex* pindexGenesisBlock = NULL;
 int nBestHeight = -1;
-
+int64_t devCoin = 0;
 uint256 nBestChainTrust = 0;
 uint256 nBestInvalidTrust = 0;
 
