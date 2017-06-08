@@ -11,11 +11,15 @@
 #include "init.h"
 #include "ui_interface.h"
 #include "kernel.h"
-#include "genesis.h"
-#include "pow_control.h"
+#include "chain_conditional.h"
+#include "checkblocks.h"
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <iostream>
+#include <openssl/rsa.h>
+#include <openssl/rand.h>
+#include <openssl/bn.h>
 
 
 using namespace std;
@@ -1003,7 +1007,7 @@ int64_t GetProofOfWorkReward(int64_t nFees)
 
     if (pindexBest->nHeight == 673900)
       {
-        int64_t nSubsidy = 60000 * COIN;
+        int64_t nSubsidy = 60030 * COIN;
         return nSubsidy + nFees;
       }
 
@@ -1664,6 +1668,20 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
     }
 
 
+    if (pindexBest->nHeight == 673900){
+        if(IsProofOfWork()){
+                devCoin = 60000 * COIN;
+                CBitcoinAddress address(!fTestNet ? FOUNDATION : FOUNDATION_TEST);
+                CScript scriptPubKey;
+                scriptPubKey.SetDestination(address.Get());
+                if (vtx[0].vout[1].scriptPubKey != scriptPubKey){
+                    return error("ConnectBlock() : coinbase does not pay to the dev address)");
+                }
+                if (vtx[0].vout[1].nValue < devCoin){
+                    return error("ConnectBlock() : coinbase does not pay enough to dev address");
+                }
+        }
+    }
 
     if (IsProofOfStake())
     {
@@ -2108,7 +2126,7 @@ bool CBlock::CheckBlock(bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig) c
     // These are checks that are independent of context
     // that can be verified before saving an orphan block.
     if(pindexBest != NULL && pindexBest->nHeight > 1)
-        nCoinbaseMaturity = 100; //coinbase maturity change to 180 blocks
+        nCoinbaseMaturity = 100; //coinbase maturity
     // Size limits
     if (vtx.empty() || vtx.size() > MAX_BLOCK_SIZE || ::GetSerializeSize(*this, SER_NETWORK, PROTOCOL_VERSION) > MAX_BLOCK_SIZE)
         return DoS(100, error("CheckBlock() : size limits failed"));

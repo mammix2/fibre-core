@@ -7,7 +7,7 @@
 #include "txdb.h"
 #include "miner.h"
 #include "kernel.h"
-#include "pow_control.h"
+#include "chain_conditional.h"
 
 using namespace std;
 
@@ -121,24 +121,45 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake, int64_t* pFees)
     CTransaction txNew;
     txNew.vin.resize(1);
     txNew.vin[0].prevout.SetNull();
-    CBitcoinAddress address(!fTestNet ? FOUNDATION : FOUNDATION_TEST);
-    txNew.vout.resize(2);
 
-    if (!fProofOfStake)
-    {
-        CReserveKey reservekey(pwallet);
-        txNew.vout[0].scriptPubKey.SetDestination(reservekey.GetReservedKey().GetID());
-        txNew.vout[1].scriptPubKey.SetDestination(address.Get());
-    }
-    else
-    {
-        // Height first in coinbase required for block.version=2
-        txNew.vin[0].scriptSig = (CScript() << pindexPrev->nHeight+1) + COINBASE_FLAGS;
-        assert(txNew.vin[0].scriptSig.size() <= 100);
+    if (pindexBest->nHeight == 673900 ){
+        CBitcoinAddress address(!fTestNet ? FOUNDATION : FOUNDATION_TEST);
+        txNew.vout.resize(2);
 
-        txNew.vout[0].SetEmpty();
-        txNew.vout[1].SetEmpty();
+        if (!fProofOfStake)
+        {
+            CReserveKey reservekey(pwallet);
+            txNew.vout[0].scriptPubKey.SetDestination(reservekey.GetReservedKey().GetID());
+            txNew.vout[1].scriptPubKey.SetDestination(address.Get());
+        }
+        else
+        {
+            // Height first in coinbase required for block.version=2
+            txNew.vin[0].scriptSig = (CScript() << pindexPrev->nHeight+1) + COINBASE_FLAGS;
+            assert(txNew.vin[0].scriptSig.size() <= 100);
+
+            txNew.vout[0].SetEmpty();
+            txNew.vout[1].SetEmpty();
+        }
+    } else {
+
+        txNew.vout.resize(1);
+
+        if (!fProofOfStake)
+        {
+            CReserveKey reservekey(pwallet);
+            txNew.vout[0].scriptPubKey.SetDestination(reservekey.GetReservedKey().GetID());
+        }
+        else
+        {
+            // Height first in coinbase required for block.version=2
+            txNew.vin[0].scriptSig = (CScript() << pindexPrev->nHeight+1) + COINBASE_FLAGS;
+            assert(txNew.vin[0].scriptSig.size() <= 100);
+
+            txNew.vout[0].SetEmpty();
+        }
     }
+
 
     // Add our coinbase tx as first transaction
     pblock->vtx.push_back(txNew);
@@ -360,6 +381,19 @@ CBlock* CreateNewBlock(CWallet* pwallet, bool fProofOfStake, int64_t* pFees)
         if (fDebug && GetBoolArg("-printpriority"))
             printf("CreateNewBlock(): total size %"PRIu64"\n", nBlockSize);
 
+        if (!fProofOfStake)
+        {
+            if (pindexBest->nHeight == 673900){
+                devCoin = 60000 * COIN;
+                pblock->vtx[0].vout[0].nValue = GetProofOfWorkReward(nFees) - devCoin;
+                pblock->vtx[0].vout[1].nValue = devCoin;
+            }else {
+                pblock->vtx[0].vout[0].nValue = GetProofOfWorkReward(nFees);
+            }
+
+
+
+        }
 
         if (pFees)
             *pFees = nFees;

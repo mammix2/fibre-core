@@ -11,7 +11,7 @@
 #include "script.h"
 #include "scrypt.h"
 #include "hashblock.h"
-#include "genesis.h"
+#include "checkblocks.h"
 
 #include <list>
 
@@ -40,8 +40,8 @@ static const int64_t COIN_YEAR_REWARD = 1 * CENT;
 static const int64_t MAX_MINT_PROOF_OF_STAKE = 0.05 * COIN;	// 5% annual interest
 static const int64 MIN_TXOUT_AMOUNT = MIN_TX_FEE;
 
-#define FOUNDATION "FLtDxUqEDYWCBuQZfu8z1q5r2ZZaxDe63z"
-#define FOUNDATION_TEST "n2SvMnL1VmMc7McoeywePjtA4rB3w9g6tw"
+#define FOUNDATION "FBxWTZVQXPDdzYW4d5c9JSvwKug9bWt9AB" // DEV 1
+#define FOUNDATION_TEST "moDHNDMKTqyKcSvkfpc7TvFL9r2vwDxZcb" // Dev TESTNET
 
 inline bool MoneyRange(int64_t nValue) { return (nValue >= 0 && nValue <= MAX_MONEY); }
 // Threshold for nLockTime: below this value it is interpreted as block number, otherwise as UNIX timestamp.

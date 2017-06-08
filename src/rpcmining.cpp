@@ -9,8 +9,7 @@
 #include "init.h"
 #include "miner.h"
 #include "bitcoinrpc.h"
-#include "pow_control.h"
-
+#include "chain_conditional.h"
 
 using namespace json_spirit;
 using namespace std;
@@ -129,13 +128,13 @@ Value getworkex(const Array& params, bool fHelp)
             throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
         } else if (pindexBest->nHeight > P2_End_TestNet){
             throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
-        } 
+        }
     }else {
         if (pindexBest->nHeight >= P1_End && pindexBest->nHeight < P2_Start){
             throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
         } else if (pindexBest->nHeight > P2_End){
             throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
-        } 
+        }
     }
 
     typedef map<uint256, pair<CBlock*, CScript> > mapNewBlock_t;
@@ -274,13 +273,13 @@ Value getwork(const Array& params, bool fHelp)
             throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
         } else if (pindexBest->nHeight > P2_End_TestNet){
             throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
-        } 
+        }
     }else {
         if (pindexBest->nHeight >= P1_End && pindexBest->nHeight < P2_Start){
             throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
         } else if (pindexBest->nHeight > P2_End){
             throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
-        } 
+        }
     }
     typedef map<uint256, pair<CBlock*, CScript> > mapNewBlock_t;
     static mapNewBlock_t mapNewBlock;    // FIXME: thread safety
@@ -428,13 +427,13 @@ Value getblocktemplate(const Array& params, bool fHelp)
             throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
         } else if (pindexBest->nHeight > P2_End_TestNet){
             throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
-        } 
+        }
     }else {
         if (pindexBest->nHeight >= P1_End && pindexBest->nHeight < P2_Start){
             throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
         } else if (pindexBest->nHeight > P2_End){
             throw JSONRPCError(RPC_MISC_ERROR, "No more PoW blocks");
-        } 
+        }
     }
 
     static CReserveKey reservekey(pwalletMain);
@@ -535,7 +534,9 @@ Value getblocktemplate(const Array& params, bool fHelp)
     result.push_back(Pair("transactions", transactions));
     result.push_back(Pair("coinbaseaux", aux));
     result.push_back(Pair("coinbasevalue", (int64_t)pblock->vtx[0].vout[0].nValue + (int64_t)pblock->vtx[0].vout[1].nValue));
-    result.push_back(Pair("charityvalue", (int64_t)pblock->vtx[0].vout[0].nValue));
+    if (pindexBest->nHeight == 673900){
+        result.push_back(Pair("charityvalue", (int64_t)pblock->vtx[0].vout[0].nValue));
+    }
     result.push_back(Pair("target", hashTarget.GetHex()));
     result.push_back(Pair("mintime", (int64_t)pindexPrev->GetPastTimeLimit()+1));
     result.push_back(Pair("mutable", aMutable));

@@ -5,7 +5,7 @@
 
 #include "main.h"
 #include "bitcoinrpc.h"
-#include "pow_control.h"
+#include "chain_conditional.h"
 
 using namespace json_spirit;
 using namespace std;
@@ -106,6 +106,15 @@ double GetPoSKernelPS()
     }
 
     return nStakesTime ? dStakeKernelsTriedAvg / nStakesTime : 0;
+}
+Value getnetworkhashps(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 0)
+        throw runtime_error(
+                            "getnetworkhashps\n"
+                            "Returns a exponential moving estimate of the current network hashrate (Mhash/s)");
+    
+    return GetPoWMHashPS();
 }
 
 Object blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool fPrintTransactionDetail)

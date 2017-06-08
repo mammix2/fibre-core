@@ -5,7 +5,7 @@ TEMPLATE = app
 DEFINES += fName1 fName2
 fName1 = "fibre-core"
 
-VERSION = 3.9.0.4
+VERSION = 3.9.0.9
 contains(QT_ARCH, i386) {
     fName2 = "-qt-x86-v"
 } else {
@@ -416,7 +416,9 @@ HEADERS += src/qt/bitcoingui.h \
     src/qt/macnotificationhandler.h \
     src/threadsafety.h \
     src/txdb-leveldb.h \ 
-    src/genesis.h
+    src/chain_conditional.h \
+    src/checkblocks.h
+
 	
 ##hashing headers	
 HEADERS += src/sph_blake.h \
